@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="DreamSoft.UCManual"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1000" Loaded="UserControl_Loaded">
+    <UserControl.Background>
+        <RadialGradientBrush RadiusX="1" RadiusY="0.8" GradientOrigin="0.6,0.7">
+            <GradientStop Color="#FF01F0EB" Offset="0.2"></GradientStop>
+            <GradientStop Color="#FF01C8F3" Offset="0.5"></GradientStop>
+            <GradientStop Color="#FF0197EB" Offset="1"></GradientStop>
+        </RadialGradientBrush>
+    </UserControl.Background>
+    
+    <Grid Name="gridLayer" />
+</UserControl>

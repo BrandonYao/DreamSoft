@@ -1,0 +1,376 @@
+﻿<UserControl x:Class="DreamSoft.UCDebug_Add"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1200" Loaded="UserControl_Loaded">
+
+    <UserControl.Resources>
+        <ControlTemplate x:Key="upButton" TargetType="{x:Type Button}">
+            <Border>
+                <Ellipse Name="yuan" Width="60" Height="60" Stroke="White" StrokeThickness="3">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="/DreamSoft;component/Images/up.png"></ImageBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsPressed" Value="true">
+                    <Setter TargetName="yuan" Property="Stroke">
+                        <Setter.Value>
+                            <SolidColorBrush Color="Red"></SolidColorBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="downButton" TargetType="{x:Type Button}">
+            <Border>
+                <Ellipse Name="yuan" Width="60" Height="60" Stroke="White" StrokeThickness="3">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="/DreamSoft;component/Images/down.png"></ImageBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsPressed" Value="true">
+                    <Setter TargetName="yuan" Property="Stroke">
+                        <Setter.Value>
+                            <SolidColorBrush Color="Red"></SolidColorBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="leftButton" TargetType="{x:Type Button}">
+            <Border>
+                <Ellipse Name="yuan" Width="60" Height="60" Stroke="White" StrokeThickness="3">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="/DreamSoft;component/Images/left.png"></ImageBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsPressed" Value="true">
+                    <Setter TargetName="yuan" Property="Stroke">
+                        <Setter.Value>
+                            <SolidColorBrush Color="Red"></SolidColorBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="rightButton" TargetType="{x:Type Button}">
+            <Border>
+                <Ellipse Name="yuan" Width="60" Height="60" Stroke="White" StrokeThickness="3">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="/DreamSoft;component/Images/right.png"></ImageBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsPressed" Value="true">
+                    <Setter TargetName="yuan" Property="Stroke">
+                        <Setter.Value>
+                            <SolidColorBrush Color="Red"></SolidColorBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <Style x:Key="centerBox" TargetType="{x:Type TextBox}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="border" Width="Auto" Height="Auto" BorderThickness="1" BorderBrush="#FF7F9DB9">
+                            <Grid x:Name="grid" Background="#FFFFFF">
+                                <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="cbStyle" TargetType="ComboBox">
+            <Setter Property="IsEditable" Value="False"></Setter>
+            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+            <Setter Property="FontSize" Value="18"></Setter>
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Border Background="White" CornerRadius="10">
+        <TabControl Grid.Row="0" Grid.ColumnSpan="2" BorderThickness="0">
+            <TabControl.Items>
+                <TabItem Header="  机 械 手  "  FontSize="18" FontWeight="Bold">
+                     <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                                <RowDefinition Height="2*"></RowDefinition>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <GroupBox Grid.Row="0" Grid.Column="0" Margin="5" Header="当前脉冲">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="120"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Ellipse Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="25" Height="25" Stroke="Black"></Ellipse>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,10,8,10">X</TextBlock>
+                                    <TextBox Name="tbNowX" Grid.Row="0" Grid.Column="1" Margin="8" FontSize="20" Style="{StaticResource centerBox}"></TextBox>
+
+                                    <Ellipse Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="25" Height="25" Stroke="Black"></Ellipse>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,10,8,10">Z</TextBlock>
+                                    <TextBox Name="tbNowZ" Grid.Row="1" Grid.Column="1" Margin="8" FontSize="20" Style="{StaticResource centerBox}"></TextBox>
+                                    <Button Grid.RowSpan="2" Grid.Column="2" HorizontalAlignment="Center" Width="100" Height="60" Click="btZero_Extraman_Click">原 点</Button>
+                                </Grid>
+                            </GroupBox>
+
+                            <GroupBox Grid.Row="1" Grid.Column="0" Margin="5" Header="手动运行">
+                                <DockPanel Grid.Row="1" Margin="0,5" Background="White">
+                                    <Button DockPanel.Dock="Top" Width="60" Height="60" Margin="0,10,0,0" Template="{StaticResource upButton}" PreviewMouseDown="btExtraman_Manual_Up_PreviewMouseDown" PreviewMouseUp="btExtraman_Manual_Z_PreviewMouseUp"></Button>
+                                    <Button DockPanel.Dock="Bottom" Width="60" Height="60" Margin="0,0,0,10" Template="{StaticResource downButton}" PreviewMouseDown="btExtraman_Manual_Down_PreviewMouseDown" PreviewMouseUp="btExtraman_Manual_Z_PreviewMouseUp"></Button>
+                                    <Button DockPanel.Dock="Left" Width="60" Height="60" Margin="80,0,0,0" Template="{StaticResource leftButton}" PreviewMouseDown="btExtraman_Manual_Left_PreviewMouseDown" PreviewMouseUp="btExtraman_Manual_X_PreviewMouseUp"></Button>
+                                    <Button DockPanel.Dock="Right" Width="60" Height="60" Margin="0,0,80,0" Template="{StaticResource rightButton}" PreviewMouseDown="btExtraman_Manual_Right_PreviewMouseDown" PreviewMouseUp="btExtraman_Manual_X_PreviewMouseUp"></Button>
+                                    <Image  Width="40" Height="40" Source="/DreamSoft;component/Images/drag_arrow.png"></Image>
+                                </DockPanel>
+                            </GroupBox>
+
+                            <GroupBox Grid.Row="2" Grid.Column="0" Margin="5" Header="自动运行">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="120"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Ellipse Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="25" Height="25" Stroke="Black"></Ellipse>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,10,8,10">X</TextBlock>
+                                    <TextBox  Grid.Row="0" Grid.Column="1" Margin="8" FontSize="20" Style="{StaticResource centerBox}" Name="tbTargetX" PreviewMouseUp="tbTarget_PreviewMouseUp"></TextBox>
+
+                                    <Ellipse Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="25" Height="25" Stroke="Black"></Ellipse>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,10,8,10">Z</TextBlock>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Margin="8" FontSize="20" Style="{StaticResource centerBox}" Name="tbTargetZ" PreviewMouseUp="tbTarget_PreviewMouseUp"></TextBox>
+                                    <Button Grid.RowSpan="2" Grid.Column="2" HorizontalAlignment="Center" Width="100" Height="60" Foreground="Crimson" Click="btRunAuto_Click">运 行</Button>
+                                </Grid>
+                            </GroupBox>
+
+                            <GroupBox Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Margin="5" Header="脉冲设定">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="60"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="60"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                <RadioButton Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Margin="30,0,30,0" GroupName="1" IsChecked="False" Name="rbAdd" FontSize="18" Checked="RB_Checked">加药</RadioButton>
+                                <RadioButton Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Center" Margin="30,0,30,0" GroupName="1" Name="rbPD"  FontSize="18" Checked="RB_Checked">盘点</RadioButton>
+                                <RadioButton Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Margin="30,0,30,0" GroupName="2" IsChecked="False" Name="rbHandL" FontSize="18" Checked="RB_Checked">左</RadioButton>
+                                <RadioButton Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Center" Margin="30,0,30,0" GroupName="2" Name="rbHandR" FontSize="18" Checked="RB_Checked">右</RadioButton>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,10,8,10">单元</TextBlock>
+                                    <ComboBox Grid.Row="2" Grid.Column="1" Margin="10" Name="cbUnitCode" SelectedIndex="0" DropDownClosed="Pos_DropDownClosed" Style="{StaticResource cbStyle}">
+                                        <ComboBox.RenderTransform>
+                                            <MatrixTransform />
+                                        </ComboBox.RenderTransform>
+                                        <ComboBoxItem Content="1" />
+                                    </ComboBox>
+                                    <TextBlock Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,10,8,10">层</TextBlock>
+                                <ComboBox Grid.Row="3" Grid.Column="1" Margin="10" Name="cbLayerCode" SelectedIndex="0" DropDownClosed="Pos_DropDownClosed" Style="{StaticResource cbStyle}">
+                                        <ComboBoxItem Content="01" />
+                                    </ComboBox>
+                                    <TextBlock Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,10,8,10">列</TextBlock>
+                                <ComboBox Grid.Row="3" Grid.Column="3" Margin="10" Name="cbColumnCode" SelectedIndex="0" DropDownClosed="Pos_DropDownClosed" Style="{StaticResource cbStyle}">
+                                    <ComboBoxItem Content="01" />
+                                </ComboBox>
+
+                                    <Ellipse Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="25" Height="25" Stroke="Black"></Ellipse>
+                                    <TextBlock Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,10,8,10">X</TextBlock>
+                                    <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Margin="10,10,30,10" FontSize="20" Style="{StaticResource centerBox}" Name="tbSaveX" Text=" "></TextBox>
+
+                                    <Ellipse Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="25" Height="25" Stroke="Black"></Ellipse>
+                                    <TextBlock Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,10,8,10">Z</TextBlock>
+                                    <TextBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Margin="10,10,30,10" FontSize="20" Style="{StaticResource centerBox}" Name="tbSaveZ" Text=" "></TextBox>
+
+                                <CheckBox Grid.Row="6" Grid.Column="1" Name="chkRow" IsChecked="False">行设定</CheckBox>
+                                <CheckBox Grid.Row="6" Grid.Column="3" Name="chkCol" IsChecked="False">列设定</CheckBox>
+
+                                <Button Grid.Row="7" Grid.ColumnSpan="4" HorizontalAlignment="Center" Width="200" Margin="5" Foreground="Crimson" Click="btRunSave_Click">运 行</Button>
+                                    <Button Grid.Row="8" Grid.ColumnSpan="4" HorizontalAlignment="Center" Width="200" Margin="5" Click="btSavePulse_Click">保 存</Button>
+                                </Grid>
+                            </GroupBox>
+
+                        <GroupBox Grid.Row="0" Grid.Column="2" Margin="5" Header="接药位置">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="120"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="25" Height="25" Stroke="Black"></Ellipse>
+                                <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,10,8,10">X</TextBlock>
+                                <TextBox Name="tbMeetX" Grid.Row="0" Grid.Column="1" Margin="8" FontSize="20" Style="{StaticResource centerBox}"></TextBox>
+
+                                <Ellipse Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="25" Height="25" Stroke="Black"></Ellipse>
+                                <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,10,8,10">Z</TextBlock>
+                                <TextBox Name="tbMeetZ" Grid.Row="1" Grid.Column="1" Margin="8" FontSize="20" Style="{StaticResource centerBox}"></TextBox>
+                                <Button Grid.Column="2" Width="100" Margin="10,5" Foreground="Crimson" Click="btRunMeet_Click">运 行</Button>
+                                <Button Grid.Row="1" Grid.Column="2" Width="100" Margin="10,5" Click="btSaveMeet_Click">保 存</Button>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="  推 药 板  "  FontSize="18" FontWeight="Bold">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="120"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                        <GroupBox Grid.Row="0" Grid.Column="0" Margin="5" Header="左侧">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                    <RowDefinition Height="4*"></RowDefinition>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="80"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="120"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10">脉冲</TextBlock>
+                                <TextBox Name="tbNowL" Grid.Row="0" Grid.Column="1" Margin="8" FontSize="20"></TextBox>
+                                <DockPanel Grid.Row="1" Grid.ColumnSpan="4">
+                                    <Button DockPanel.Dock="Top" Width="60" Height="60" Margin="0,10,0,0" Template="{StaticResource upButton}" PreviewMouseDown="btPlateUpL_MouseDown" PreviewMouseUp="btPlateL_MouseUp"></Button>
+                                    <Button DockPanel.Dock="Bottom" Width="60" Height="60" Margin="0,0,0,10" Template="{StaticResource downButton}" PreviewMouseDown="btPlateDownL_MouseDown" PreviewMouseUp="btPlateL_MouseUp"></Button>
+
+                                    <Image  Width="40" Height="40" Source="/DreamSoft;component/Images/up_down.png"></Image>
+                                </DockPanel>
+                                <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10">自动脉冲</TextBlock>
+                                <TextBox Grid.Row="2" Grid.Column="1" Margin="8" FontSize="20" Name="tbTargetL" PreviewMouseUp="tbTarget_PreviewMouseUp"></TextBox>
+                                <Button Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" Margin="10,5" Width="100" Click="btRunL_Click">运 行</Button>
+
+                                <TextBlock Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10">脉冲上限</TextBlock>
+                                <TextBox Name="tbPlatePulseMaxL" Grid.Row="3" Grid.Column="1" Margin="8" FontSize="20"></TextBox>
+                                <Button Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" Margin="10,5" Width="100" Click="btRun_Save_L_Click">运 行</Button>
+                                <Button Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" Margin="10,5" Width="100" Click="btSaveL_Click">保 存</Button>
+                            </Grid>
+                        </GroupBox>
+
+                        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical">
+                                <Button Margin="10,30,10,30" Height="60" Click="btZero_Plate_Click">原 点</Button>
+                                <Button Margin="10,0,10,30" Height="60" Click="btUp_Click">上 推</Button>
+                            </StackPanel>
+
+                        <GroupBox Grid.Row="0" Grid.Column="2" Margin="5" Header="右侧">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                    <RowDefinition Height="4*"></RowDefinition>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="80"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="120"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10">脉冲</TextBlock>
+                                <TextBox Name="tbNowR" Grid.Row="0" Grid.Column="1" Margin="8" FontSize="20"></TextBox>
+                                <DockPanel Grid.Row="1" Grid.ColumnSpan="4">
+                                    <Button DockPanel.Dock="Top" Width="60" Height="60" Margin="0,10,0,0" Template="{StaticResource upButton}" PreviewMouseUp="btPlateR_MouseUp" PreviewMouseDown="btPlateUpR_MouseDown"></Button>
+                                    <Button DockPanel.Dock="Bottom" Width="60" Height="60" Margin="0,0,0,10" Template="{StaticResource downButton}" PreviewMouseDown="btPlateDownR_MouseDown" PreviewMouseUp="btPlateR_MouseUp"></Button>
+
+                                    <Image  Width="40" Height="40" Source="/DreamSoft;component/Images/up_down.png"></Image>
+                                </DockPanel>
+                                <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10">自动脉冲</TextBlock>
+                                <TextBox Grid.Row="2" Grid.Column="1" Margin="8" FontSize="20" Name="tbTargetR" PreviewMouseUp="tbTarget_PreviewMouseUp"></TextBox>
+                                <Button Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" Margin="10,5" Width="100" Click="btRunR_Click">运 行</Button>
+
+                                <TextBlock Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10">脉冲上限</TextBlock>
+                                <TextBox Name="tbPlatePulseMaxR" Grid.Row="3" Grid.Column="1" Margin="8" FontSize="20"></TextBox>
+                                <Button Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" Margin="10,5" Width="100" Click="btRun_Save_R_Click">运 行</Button>
+                                <Button Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" Margin="10,5" Width="100" Click="btSaveR_Click">保 存</Button>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="  激 光  "  FontSize="18" FontWeight="Bold">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="140"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="600"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <GroupBox Header="盘点激光">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="80"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="120"></ColumnDefinition>
+                                    <ColumnDefinition Width="120"></ColumnDefinition>
+                                    <ColumnDefinition Width="120"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10">左测距</TextBlock>
+                                <TextBox Grid.Row="0" Grid.Column="1" Margin="8" FontSize="20" Name="tbLaserLeft" Style="{StaticResource centerBox}"></TextBox>
+                                <Button Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Margin="10,5" Width="100" Click="btReadLaserL_Click">读 数</Button>
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10">右测距</TextBlock>
+                                <TextBox Grid.Row="1" Grid.Column="1" Margin="8" FontSize="20" Name="tbLaserRight" Style="{StaticResource centerBox}"></TextBox>
+                                <Button Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" Margin="10,5" Width="100" Click="btReadLaserR_Click">读 数</Button>
+
+                                <Button Grid.Row="0" Grid.Column="3" Grid.RowSpan="2" HorizontalAlignment="Center" Margin="10" Width="100" FontSize="18" Foreground="Crimson" Click="btOpen_Click">打 开</Button>
+                                <Button Grid.Row="0" Grid.Column="4" Grid.RowSpan="2" HorizontalAlignment="Center" Margin="10" Width="100" FontSize="18" Click="btClose_Click">关 闭</Button>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+                </TabItem>
+            </TabControl.Items>
+        </TabControl>
+    </Border>
+    
+</UserControl>

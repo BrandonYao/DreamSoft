@@ -1,0 +1,14 @@
+﻿<Window x:Class="DreamSoft.WinLED"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="96" Width="832" WindowStyle="None"  Loaded="Window_Loaded" Background="Black" ResizeMode="NoResize" Icon="/DreamSoft;component/Images/led.png">
+    <Window.Resources>
+        <Style x:Key="TextBlockStyle" TargetType="TextBlock" x:Name="TextBlockStyle">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="3"/>
+        </Style>
+    </Window.Resources>
+    <Grid Name="grid"/>
+</Window>

@@ -1,0 +1,24 @@
+﻿<Window x:Class="DreamSoft.WinMain_Manage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:r="clr-namespace:Wpf.Controls;assembly=Wpf.TabControl"
+        Title="自动化药房管理系统" Height="500" Width="800" 
+        WindowState="Maximized" Loaded="Window_Loaded" Icon="/DreamSoft;component/Images/hospital.ico">
+
+    <Window.Background>
+        <RadialGradientBrush RadiusX="1" RadiusY="0.8" GradientOrigin="0.6,0.7">
+            <GradientStop Color="#FF01F0EB" Offset="0.2"></GradientStop>
+            <GradientStop Color="#FF01C8F3" Offset="0.5"></GradientStop>
+            <GradientStop Color="#FF0197EB" Offset="1"></GradientStop>
+        </RadialGradientBrush>
+    </Window.Background>
+
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" Height="auto" MinHeight="40" FontSize="18" FontWeight="Bold" Name="menuMain" />
+
+        <!--TabControl Name="tc_Child" DockPanel.Dock="Top" Height="200"/-->
+
+        <r:TabControl Margin="5" Name="tc_Child2" AllowAddNew="False" />
+
+    </DockPanel>
+</Window>

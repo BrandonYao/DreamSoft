@@ -1,0 +1,28 @@
+﻿<UserControl x:Class="DreamSoft.UCParameter"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1000" Loaded="UserControl_Loaded">
+    <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="参数类别">
+                <StackPanel Name="spGroup">
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="参数明细" Grid.Column="1">
+                    <DataGrid Margin="5" AutoGenerateColumns="False" CanUserAddRows="False" Name="dgParameter" CellEditEnding="dgParameter_CellEditEnding" BeginningEdit="dgParameter_BeginningEdit" AlternationCount="2">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="参数代码" Binding="{Binding Path=ParaCode}" Width="200" IsReadOnly="True" />
+                            <DataGridTextColumn Header="参数值" Binding="{Binding Path=ParaValue}" Width="150"/>
+                            <DataGridTextColumn Header="参数说明" Binding="{Binding Path=ParaName}" Width="400" IsReadOnly="True" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+            </GroupBox>
+    </Grid>
+</UserControl>

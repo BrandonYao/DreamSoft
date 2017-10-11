@@ -1,0 +1,557 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C2B4D5F9-6AC2-4206-8859-CCC3BBF406E1}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DreamSoft</RootNamespace>
+    <AssemblyName>DreamSoft</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <Utf8Output>true</Utf8Output>
+    <ExpressionBlendVersion>4.0.20621.0</ExpressionBlendVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Images\hospital.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AxInterop.ZKFPEngXControl">
+      <HintPath>bin\AxInterop.ZKFPEngXControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="Wpf.TabControl">
+      <HintPath>bin\Wpf.TabControl.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Class\ColorConverter.cs" />
+    <Compile Include="Class\DPJ_AP.cs" />
+    <Compile Include="Class\DPJ_CP.cs" />
+    <Compile Include="Class\Laser.cs" />
+    <Compile Include="Class\OutDrug_AP.cs" />
+    <Compile Include="Class\OutDrug_CP.cs" />
+    <Compile Include="Class\PLC_Com_CP.cs" />
+    <Compile Include="Class\PLC_SP.cs" />
+    <Compile Include="Class\PLC_Com_AP.cs" />
+    <Compile Include="Class\PLC_Tcp_AP.cs" />
+    <Compile Include="Class\PLC_Tcp_CP.cs" />
+    <Compile Include="Class\Scanner.cs" />
+    <Compile Include="Class\Simulation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Config\Config.cs" />
+    <Compile Include="Config\WinConfig.xaml.cs">
+      <DependentUpon>WinConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\TreeModel.cs" />
+    <Compile Include="MSG\Msg.cs" />
+    <Compile Include="MSG\WinMsg.xaml.cs">
+      <DependentUpon>WinMsg.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControl\ZsmTreeView.xaml.cs">
+      <DependentUpon>ZsmTreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="中药机软件\WinMain_CP.xaml.cs">
+      <DependentUpon>WinMain_CP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="中药机软件\出药\UCDebug_Out_CP.xaml.cs">
+      <DependentUpon>UCDebug_Out_CP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="中药机软件\出药\UCError_Out_CP.xaml.cs">
+      <DependentUpon>UCError_Out_CP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="中药机软件\出药\UCOut_Auto_CP.xaml.cs">
+      <DependentUpon>UCOut_Auto_CP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="中药机软件\出药\UCOut_Manual_CP.xaml.cs">
+      <DependentUpon>UCOut_Manual_CP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="中药机软件\加药\UCAdd_CP.xaml.cs">
+      <DependentUpon>UCAdd_CP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="中药机软件\加药\UCAdd_List_CP.xaml.cs">
+      <DependentUpon>UCAdd_List_CP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="中药机软件\加药\UCDebug_Add_CP.xaml.cs">
+      <DependentUpon>UCDebug_Add_CP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="发药机软件\WinMain_AP.xaml.cs">
+      <DependentUpon>WinMain_AP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="发药机软件\出药\UCDebug_Out.xaml.cs">
+      <DependentUpon>UCDebug_Out.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="发药机软件\出药\UCError_Out.xaml.cs">
+      <DependentUpon>UCError_Out.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="发药机软件\出药\UCOut_Auto.xaml.cs">
+      <DependentUpon>UCOut_Auto.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="发药机软件\出药\UCOut_Manual.xaml.cs">
+      <DependentUpon>UCOut_Manual.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="发药机软件\加药\UCAdd.xaml.cs">
+      <DependentUpon>UCAdd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="发药机软件\加药\UCAdd_List.xaml.cs">
+      <DependentUpon>UCAdd_List.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="发药机软件\加药\UCDebug_Add.xaml.cs">
+      <DependentUpon>UCDebug_Add.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="发药机软件\加药\UCError_PD.xaml.cs">
+      <DependentUpon>UCError_PD.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="发药机软件\加药\UCPD.xaml.cs">
+      <DependentUpon>UCPD.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="滚筒柜软件\Function\UCAuto.xaml.cs">
+      <DependentUpon>UCAuto.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="滚筒柜软件\Function\UCDebug.xaml.cs">
+      <DependentUpon>UCDebug.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="滚筒柜软件\Function\UCManual.xaml.cs">
+      <DependentUpon>UCManual.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="滚筒柜软件\Function\UCSearch.xaml.cs">
+      <DependentUpon>UCSearch.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="滚筒柜软件\WinMain_SP.xaml.cs">
+      <DependentUpon>WinMain_SP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="管理软件\WinZKFinger.xaml.cs">
+      <DependentUpon>WinZKFinger.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="管理软件\排队叫号\WinLED.xaml.cs">
+      <DependentUpon>WinLED.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="管理软件\数据接口\UCData.xaml.cs">
+      <DependentUpon>UCData.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="管理软件\系统\UCRole.xaml.cs">
+      <DependentUpon>UCRole.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="管理软件\工具\UCVirtualPresc.xaml.cs">
+      <DependentUpon>UCVirtualPresc.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="管理软件\系统\UCUser.xaml.cs">
+      <DependentUpon>UCUser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="管理软件\系统\WinPassword.xaml.cs">
+      <DependentUpon>WinPassword.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="管理软件\储位\WinPos_GT.xaml.cs">
+      <DependentUpon>WinPos_GT.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="管理软件\储位\UCPos_Set_GT.xaml.cs">
+      <DependentUpon>UCPos_Set_GT.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="管理软件\储位\UCPos_Set_KF.xaml.cs">
+      <DependentUpon>UCPos_Set_KF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="管理软件\药品\UCDrug.xaml.cs">
+      <DependentUpon>UCDrug.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="管理软件\WinLogin.xaml.cs">
+      <DependentUpon>WinLogin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WinLogo.xaml.cs">
+      <DependentUpon>WinLogo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="管理软件\系统\UCMachine.xaml.cs">
+      <DependentUpon>UCMachine.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="管理软件\系统\UCParameter.xaml.cs">
+      <DependentUpon>UCParameter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="管理软件\系统\UCWindow.xaml.cs">
+      <DependentUpon>UCWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="管理软件\配发药\UCPresc.xaml.cs">
+      <DependentUpon>UCPresc.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Config\WinConfig.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MSG\WinMsg.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="中药机软件\WinMain_CP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="中药机软件\出药\UCDebug_Out_CP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="中药机软件\出药\UCError_Out_CP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="中药机软件\出药\UCOut_Auto_CP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="中药机软件\出药\UCOut_Manual_CP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="中药机软件\加药\UCAdd_CP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="中药机软件\加药\UCAdd_List_CP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="中药机软件\加药\UCDebug_Add_CP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="发药机软件\WinMain_AP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="发药机软件\出药\UCDebug_Out.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="发药机软件\出药\UCError_Out.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="发药机软件\出药\UCOut_Auto.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="发药机软件\出药\UCOut_Manual.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="发药机软件\加药\UCAdd.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="发药机软件\加药\UCAdd_List.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="发药机软件\加药\UCDebug_Add.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="发药机软件\加药\UCError_PD.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="发药机软件\加药\UCPD.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="滚筒柜软件\Function\UCAuto.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="滚筒柜软件\Function\UCDebug.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="滚筒柜软件\Function\UCManual.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="滚筒柜软件\Function\UCSearch.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="滚筒柜软件\WinMain_SP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="管理软件\WinMain_Manage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="管理软件\WinMain_Manage.xaml.cs">
+      <DependentUpon>WinMain_Manage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Resources\GlassButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\BureauBlue.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserControl\ZsmTreeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="管理软件\WinZKFinger.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="管理软件\排队叫号\WinLED.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="管理软件\数据接口\UCData.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="管理软件\系统\UCRole.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="管理软件\工具\UCVirtualPresc.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="管理软件\系统\UCUser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="管理软件\系统\WinPassword.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="管理软件\储位\WinPos_GT.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="管理软件\储位\UCPos_Set_GT.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="管理软件\储位\UCPos_Set_KF.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="管理软件\药品\UCDrug.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="管理软件\WinLogin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WinLogo.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="管理软件\系统\UCMachine.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="管理软件\系统\UCParameter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="管理软件\系统\UCWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="管理软件\配发药\UCPresc.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Config\config.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\close.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\presc.png" />
+    <Resource Include="Images\zoom_in.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\zoom_out.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\window.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\key.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\drug.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\machine.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\about.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\role.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\top.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\data.png" />
+    <Resource Include="Images\led.png" />
+    <Resource Include="Images\voice.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\location.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CSHelper\CSHelper.csproj">
+      <Project>{A3E4ED5A-3B82-4266-BC31-2A148B9FC779}</Project>
+      <Name>CSHelper</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\hospital.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\hand.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\prescription.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\stock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\wrench.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\list.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\up_down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\drag_arrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\left.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\right.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\search.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\config.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\theme.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\plate.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

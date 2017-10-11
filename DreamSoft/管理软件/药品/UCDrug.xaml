@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="DreamSoft.UCDrug"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="1200" Loaded="UserControl_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        
+        <DataGrid Margin="5" Grid.ColumnSpan="2" AutoGenerateColumns="False" CanUserAddRows="False" Name="dgDrug" CellEditEnding="dgDrug_CellEditEnding" BeginningEdit="dgDrug_BeginningEdit" AlternationCount="2">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="药品编码" Binding="{Binding Path=DrugOnlyCode}" Width="150" IsReadOnly="True" />
+                <DataGridTextColumn Header="药品名称" Binding="{Binding Path=DrugName}" Width="150" IsReadOnly="True"/>
+                <DataGridTextColumn Header="药品规格" Binding="{Binding Path=DrugSpec}" Width="150" IsReadOnly="True" />
+                <DataGridTextColumn Header="药品厂家" Binding="{Binding Path=DrugFactory}" Width="150" IsReadOnly="True" />
+                <DataGridTextColumn Header="药品条形码" Binding="{Binding Path=DrugBarCode}" Width="150"/>
+                <DataGridTextColumn Header="药品监管码" Binding="{Binding Path=DrugSupCode}" Width="100"/>
+                <DataGridTextColumn Header="药品长度" Binding="{Binding Path=Length}" Width="100"/>
+                <DataGridTextColumn Header="药品宽度" Binding="{Binding Path=Width}" Width="80"/>
+                <DataGridTextColumn Header="药品厚度" Binding="{Binding Path=Height}" Width="80"/>
+                <DataGridTextColumn Header="出药时长" Binding="{Binding Path=OutTime}" Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="18" Margin="20,0">药品拼音码：</TextBlock>
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="20,10" Width="300" FontSize="18" Name="tbPYCode" TextChanged="tbPYCode_TextChanged" HorizontalAlignment="Left"></TextBox>
+    </Grid>
+</UserControl>

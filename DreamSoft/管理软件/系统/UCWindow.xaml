@@ -1,0 +1,121 @@
+﻿<UserControl x:Class="DreamSoft.UCWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:local="clr-namespace:DreamSoft"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             d:DesignHeight="600" d:DesignWidth="1200" Name="this" Loaded="this_Loaded">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"/>
+        <local:ColorConverter x:Key="myConverter"></local:ColorConverter>
+        <Style x:Key="cbStyle" TargetType="ComboBox">
+            <Setter Property="IsEditable" Value="False"></Setter>
+            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+            <Setter Property="FontSize" Value="14"></Setter>
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+
+            <DataGrid Margin="5" AutoGenerateColumns="False" Grid.RowSpan="2" CanUserAddRows="False" Name="dgWindow" SelectionChanged="dgWindow_SelectionChanged">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="窗口号" Width="80" IsReadOnly="True" Binding="{Binding Path=WindowNo}"/>
+                    <DataGridTextColumn Header="窗口名称" Width="100" IsReadOnly="True" Binding="{Binding Path=WindowName}"/>
+                    <DataGridTemplateColumn Header="处方类型" Width="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox Margin="10,0" Text="{Binding Path=PrescType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Path=PRS,ElementName=this}" SelectedValue="{Binding PrescType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource cbStyle}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="出药模式" Width="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                            <ComboBox Margin="10,0" Text="{Binding Path=OutModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Path=OMS,ElementName=this}" SelectedValue="{Binding OutModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource cbStyle}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="是否默认" Width="100" IsReadOnly="True" Binding="{Binding Path=DefaultFlag}"/>
+                    <DataGridTemplateColumn Header="操作" Width="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="设为默认" Tag="{Binding Path=WindowNo}" Click="btDefault_Click" Margin="5,1" Visibility="{Binding IsSelected,RelativeSource={RelativeSource AncestorType=DataGridCell},Converter={StaticResource boolToVisibilityConverter}}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="是否开启" Width="100" IsReadOnly="True" Binding="{Binding Path=OpenFlag}" />
+                    <DataGridTemplateColumn Header="操作" Width="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="开/关" Tag="{Binding Path=WindowNo}" Click="btOpen_Click" Margin="5,1" Visibility="{Binding IsSelected,RelativeSource={RelativeSource AncestorType=DataGridCell},Converter={StaticResource boolToVisibilityConverter}}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+                <DataGrid.ItemContainerStyle>
+                    <Style TargetType="{x:Type DataGridRow}">
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <Binding Converter="{StaticResource myConverter}"></Binding>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DataGrid.ItemContainerStyle>
+            </DataGrid>
+
+        <GroupBox Header="发药机列表" Grid.Column="1">
+                <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" Name="dgKF" Margin="5">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="选择" Width="40">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Name="cbStatus" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="设备编号" Width="100" IsReadOnly="True" Binding="{Binding Path=MacCode}"/>
+                        <DataGridTextColumn Header="设备名称" Width="150" IsReadOnly="True" Binding="{Binding Path=MacName}"/>
+                        <DataGridTemplateColumn Header="出药口" Width="100">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                <ComboBox Margin="10,0" Text="{Binding Path=OutPos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Path=PTS,ElementName=this}" SelectedValue="{Binding OutPos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource cbStyle}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+        </GroupBox>
+
+        <GroupBox Header="其他设备列表" Grid.Row="1" Grid.Column="1">
+                <DataGrid Margin="5"  Grid.Column="1" AutoGenerateColumns="False" CanUserAddRows="False" Name="dgMac">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="选择" Width="40">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Name="cbStatus" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="设备编号" Width="100" IsReadOnly="True" Binding="{Binding Path=MacCode}"/>
+                        <DataGridTextColumn Header="设备名称" Width="150" IsReadOnly="True" Binding="{Binding Path=MacName}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+        </GroupBox>
+
+        <Button Grid.Row="2" Grid.Column="2" Margin="100,10" Content="保 存" FontSize="24" Click="btSave_Click"></Button>
+    </Grid>
+</UserControl>

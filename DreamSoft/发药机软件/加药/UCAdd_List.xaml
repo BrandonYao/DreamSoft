@@ -1,0 +1,88 @@
+﻿<UserControl x:Class="DreamSoft.UCAdd_List"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1200" Loaded="UserControl_Loaded">
+
+    <UserControl.Resources>
+
+        <Style x:Key="cbStyle" TargetType="ComboBox">
+            <Setter Property="IsEditable" Value="False"></Setter>
+            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+            <Setter Property="FontSize" Value="18"></Setter>
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+        </Style>
+    </UserControl.Resources>
+    
+    <Grid Background="#FFE0EAF6">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"></RowDefinition>
+            <RowDefinition Height="60"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10">总容量</TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10" FontSize="20" Name="tbSum"></TextBlock>
+
+        <TextBlock Grid.Row="0" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10">缺药量</TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="5" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10" FontSize="20" Name="tbShort"></TextBlock>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10">排 序</TextBlock>
+        <ComboBox Grid.Row="0" Grid.Column="1" Margin="10" FontSize="16" SelectedIndex="2" Style="{StaticResource cbStyle}" Name="cbSort">
+            <ComboBoxItem Content="库存量升序" />
+            <ComboBoxItem Content="缺药量降序" />
+            <ComboBoxItem Content="缺药比降序" />
+        </ComboBox>
+
+        <Button Grid.Row="1" Grid.Column="1" Width="150" HorizontalAlignment="Center" Margin="5" FontSize="18" Click="btRefresh_Click">刷 新</Button>
+        <Button Grid.Row="1" Grid.Column="2" Width="150"  HorizontalAlignment="Center" Margin="5" Foreground="Crimson" FontSize="18" Click="btPrint_Click">打 印</Button>
+
+        <Border Grid.Row="2" Grid.ColumnSpan="6" CornerRadius="10" Margin="5,10,5,10" Padding="5" Background="White">
+   
+                <ListView Margin="5" FontSize="20" Name="lvList" DataContext="{Binding}" ItemsSource="{Binding}" Foreground="Black" AlternationCount="2">
+                    <ListView.View>
+                        <GridView>
+                            <GridView.Columns>
+                                <GridViewColumn Header="库存" Width="80" DisplayMemberBinding="{Binding Path=Num}"></GridViewColumn>
+                                <GridViewColumn Header="缺药" Width="80" DisplayMemberBinding="{Binding Path=Short}"></GridViewColumn>
+                                <GridViewColumn Header="缺药百分比" Width="100" DisplayMemberBinding="{Binding Path=ShortPercent}"></GridViewColumn>
+                                <GridViewColumn Header="药品编码" Width="150" DisplayMemberBinding="{Binding Path=DrugOnlyCode}"></GridViewColumn>
+                                <GridViewColumn Header="药品名称" Width="200" DisplayMemberBinding="{Binding Path=DrugName}"></GridViewColumn>
+                                <GridViewColumn Header="药品规格" Width="150" DisplayMemberBinding="{Binding Path=DrugSpec}"></GridViewColumn>
+                                <GridViewColumn Header="厂家" Width="200" DisplayMemberBinding="{Binding Path=DrugFactory}"></GridViewColumn>
+                            </GridView.Columns>
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Setter Property="Background" Value="Lavender"/>
+                            <Setter Property="Margin" Value="2"/>
+                            <Setter Property="FontSize" Value="16"/>
+                            <Style.Triggers>
+                                <Trigger Property="ListView.AlternationIndex" Value="1">
+                                    <Setter Property="Background" Value="AliceBlue"/>
+                                </Trigger>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsSelected" Value="true" />
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="Background" Value="Red"></Setter>
+                                </MultiTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+          
+        </Border>
+    </Grid>
+</UserControl>

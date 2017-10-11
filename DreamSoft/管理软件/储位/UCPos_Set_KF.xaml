@@ -1,0 +1,123 @@
+﻿<UserControl x:Class="DreamSoft.UCPos_Set_KF"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="1000" Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <Style x:Key="cbStyle" TargetType="ComboBox">
+            <Setter Property="IsEditable" Value="False"></Setter>
+            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+            <Setter Property="FontSize" Value="14"></Setter>
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="ItemContainerStyle" >
+                <Setter.Value>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Padding" Value="3"/>
+                        <Style.Triggers>
+                            <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                <Setter Property="Background" Value="Lavender"/>
+                            </Trigger>
+                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                <Setter Property="Background" Value="AliceBlue"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        
+        <GroupBox Grid.ColumnSpan="1" Header="药品列表">
+                <DataGrid Margin="5" AutoGenerateColumns="False" CanUserAddRows="False" Name="dgDrug" AlternationCount="2" SelectionChanged="dgDrug_SelectionChanged" RowHeaderWidth="0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="药品编码" Binding="{Binding Path=DrugOnlyCode}" Width="150" IsReadOnly="True" />
+                        <DataGridTextColumn Header="药品名称" Binding="{Binding Path=DrugName}" Width="150" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="药品规格" Binding="{Binding Path=DrugSpec}" Width="150" IsReadOnly="True" />
+                        <DataGridTextColumn Header="药品厂家" Binding="{Binding Path=DrugFactory}" Width="100" IsReadOnly="True" />
+                        <DataGridTextColumn Header="药品长度" Binding="{Binding Path=Length}" Width="80"/>
+                        <DataGridTextColumn Header="药品宽度" Binding="{Binding Path=Width}" Width="80"/>
+                        <DataGridTextColumn Header="药品厚度" Binding="{Binding Path=Height}" Width="80"/>
+                        <DataGridTextColumn Header="单位" Binding="{Binding Path=Unit}" Width="60"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+        </GroupBox>
+        
+        <GroupBox Grid.Column="1" Header="已有储位">
+                <DataGrid Margin="5" AutoGenerateColumns="False" CanUserAddRows="False" Name="dgPos" AlternationCount="2" RowHeaderWidth="0">
+                    <DataGrid.Columns>
+
+                        <DataGridTemplateColumn Header="选择" Width="40">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Name="cbStatus" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <!--DataGridCheckBoxColumn Header="选择" Binding="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="40" /-->
+                        
+                        <DataGridTextColumn Header="设备号" Binding="{Binding Path=MacCode}" Width="60" IsReadOnly="True" />
+                        <DataGridTextColumn Header="储位号" Binding="{Binding Path=PosCode}" Width="100" IsReadOnly="True"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+        </GroupBox>
+
+        <GroupBox Grid.Column="2" Grid.ColumnSpan="1" Header="可分储位">
+                <DataGrid Margin="5" AutoGenerateColumns="False" CanUserAddRows="False" Name="dgPos_Empty" AlternationCount="2" RowHeaderWidth="0">
+                    <DataGrid.Columns>
+                        
+                        <DataGridTemplateColumn Header="选择" Width="40">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Name="cbStatus" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <!--DataGridCheckBoxColumn Header="选择" Binding="{Binding Path=IsChecked}" Width="40" /-->
+                        
+                        <DataGridTextColumn Header="储位号" Binding="{Binding Path=PosCode}" Width="80" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="最大宽度" Binding="{Binding Path=MaxWidth}" Width="80" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="最小宽度" Binding="{Binding Path=MinWidth}" Width="80" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="高度" Binding="{Binding Path=Height}" Width="60" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="长度" Binding="{Binding Path=Length}" Width="60" IsReadOnly="True" />
+                    </DataGrid.Columns>
+                </DataGrid>
+        </GroupBox>
+
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+        <TextBlock  Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="16" Margin="10,0">药品拼音码：</TextBlock>
+        <TextBox Grid.Column="1" Margin="10,10,50,10" FontSize="18" Name="tbPYCode" TextChanged="tbPYCode_TextChanged" VerticalContentAlignment="Center"></TextBox>
+        </Grid>
+        
+        <Button Grid.Row="1" Grid.Column="1" Margin="20,5" Content="删 除" Click="btDelete_Click"></Button>
+
+        <Grid Grid.Row="1" Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="16">设备：</TextBlock>
+            <ComboBox Grid.Row="0" Grid.Column="1" Margin="10" Name="cbMac" Style="{StaticResource cbStyle}" SelectionChanged="cbMac_SelectionChanged"/>
+            <Button Grid.Row="0" Grid.Column="2" Margin="5,5" Content="添 加" Click="btAdd_Click"></Button>
+        </Grid>
+    </Grid>
+</UserControl>

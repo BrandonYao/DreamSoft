@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="DreamSoft.UCPos_Set_GT"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1000" Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <Style x:Key="ColumnHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"></Setter>
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+            <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
+            <Setter Property="Background" Value="LightBlue"></Setter>
+            <Setter Property="TextAlignment" Value="Center"></Setter>
+            <Setter Property="Padding" Value="5"></Setter>
+        </Style>
+
+        <Style x:Key="RowHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"></Setter>
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+            <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
+            <Setter Property="Background" Value="LightBlue"></Setter>
+            <Setter Property="TextAlignment" Value="Center"></Setter>
+            <Setter Property="Padding" Value="5"></Setter>
+            <Setter Property="TextWrapping" Value="WrapWithOverflow"></Setter>
+        </Style>
+
+        <Style x:Key="cbStyle" TargetType="ComboBox">
+            <Setter Property="IsEditable" Value="False"></Setter>
+            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+            <Setter Property="FontSize" Value="14"></Setter>
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="Margin" Value="10,5"></Setter>
+            <Setter Property="ItemContainerStyle" >
+                <Setter.Value>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Padding" Value="3"/>
+                        <Style.Triggers>
+                            <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                <Setter Property="Background" Value="Lavender"/>
+                            </Trigger>
+                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                <Setter Property="Background" Value="AliceBlue"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="120"/>
+        </Grid.ColumnDefinitions>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Viewbox Name="vb">
+                <Grid ShowGridLines="True" Name="grid_Pos"/>
+            </Viewbox>
+        </ScrollViewer>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="设备号：" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="5"></TextBlock>
+            <ComboBox Name="cbMac" SelectionChanged="cbMac_SelectionChanged" Grid.Row="1" AlternationCount="2" Style="{StaticResource cbStyle}"/>
+            <TextBlock Grid.Row="2" Text="单元号：" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="5"></TextBlock>
+            <ComboBox Name="cbUnit" SelectionChanged="cbUnit_SelectionChanged" Grid.Row="3" AlternationCount="2" Style="{StaticResource cbStyle}"/>
+
+            <Button Grid.Row="4" Margin="20,10" Content="刷新" Click="btRefresh_Click"></Button>
+            
+            <Button Name="btZomm_In" Grid.Row="5" VerticalAlignment="Bottom" Margin="15" Height="{Binding ElementName=btZomm_In, Path=ActualWidth}" Style="{StaticResource GlassButton}" Background="Transparent" Click="btBig_Click">
+                <Image Width="{Binding ElementName=btZoom_In,Path=ActualWidth}" Height="{Binding Width}" Source="/DreamSoft;component/Images/zoom_in.png" />
+            </Button>
+
+            <Button Name="btZomm_Out" Grid.Row="6" VerticalAlignment="Top" Margin="15" Height="{Binding ElementName=btZomm_Out, Path=ActualWidth}" Style="{StaticResource GlassButton}" Background="Transparent" Click="btSmall_Click">
+                <Image Width="{Binding ElementName=btZoom_Out,Path=ActualWidth}" Height="{Binding ElementName=btZoom_Out,Path=ActualWidth}" Source="/DreamSoft;component/Images/zoom_out.png" />
+            </Button>
+        </Grid>
+    </Grid>
+</UserControl>
