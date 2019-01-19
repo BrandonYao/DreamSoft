@@ -72,6 +72,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Class\ColorConverter.cs" />
+    <Compile Include="Class\DCT_AP.cs" />
     <Compile Include="Class\DPJ_AP.cs" />
     <Compile Include="Class\DPJ_CP.cs" />
     <Compile Include="Class\Laser.cs" />
