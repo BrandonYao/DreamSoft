@@ -1869,7 +1869,7 @@ where di.drugonlycode=dp.drugonlycode and dp.maccode='{0}' and dp.poscode='{1}'"
 
             int master = int.Parse(poscode.Substring(1, 2));
             int dct = int.Parse(poscode.Substring(3, 2));
-            if (DPJ_AP.DCTMoveDownSingle(master, dct, t))
+            if (DCT_AP.DCTMoveDownSingle(master, dct, t))
             {
                 //弹跳成功，记录次数
                 sql = "update sys_posinfo set record=(record+1) where maccode='{0}' and poscode='{1}'"; 
@@ -1901,7 +1901,7 @@ where di.drugonlycode=dp.drugonlycode and dp.maccode='{0}' and dp.poscode='{1}'"
             int master = int.Parse(poscode.Substring(1, 2));
             int dct = int.Parse(poscode.Substring(3, 2));
             int num;
-            if (!DPJ_AP.ReadRecordSingle(master, dct, out num))
+            if (!DCT_AP.ReadRecordSingle(master, dct, out num))
             {
             }
             return num;
@@ -1927,7 +1927,7 @@ where di.drugonlycode=dp.drugonlycode and dp.maccode='{0}' and dp.poscode='{1}'"
         {
             int master = int.Parse(poscode.Substring(1, 2));
             int dct = int.Parse(poscode.Substring(3, 2));
-            if (!DPJ_AP.ClearRecordSingle(master, dct))
+            if (!DCT_AP.ClearRecordSingle(master, dct))
             {
             }
         }

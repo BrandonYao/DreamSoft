@@ -98,10 +98,11 @@ namespace DreamSoft
                 }
                 if (Config.Mac_A.DPJ == "Y")
                 {
-                    if (ports.Contains(Config.Mac_A.Port_DPJ))
-                        DPJ_AP.Initial();
-                    else
-                        csMsg.ShowWarning("单片机串口不存在", true);
+                    DCT_AP.Initial();
+                    //if (ports.Contains(Config.Mac_A.Port_DPJ))
+                    //    DPJ_AP.Initial();
+                    //else
+                    //    csMsg.ShowWarning("单片机串口不存在", true);
                 }
             }
             grid_Key.Visibility = Visibility.Collapsed;
@@ -154,7 +155,7 @@ namespace DreamSoft
 
             PLC_Tcp_AP.ThrowMsg += new PLC_Tcp_AP.ShowMsg(MsgChanged);
             PLC_Com_AP.ThrowMsg += new PLC_Com_AP.ShowMsg(MsgChanged);
-            DPJ_AP.ThrowMsg += new DPJ_AP.ShowMsg(MsgChanged);
+            DCT_AP.ThrowMsg += new DPJ_AP.ShowMsg(MsgChanged);
             Scanner.ThrowMsg += new Scanner.ShowMsg(MsgChanged);
             Laser.ThrowMsg += new Laser.ShowMsg(MsgChanged);
             CSHelper.SQL.ThrowMsg += new CSHelper.SQL.ShowMsg(MsgChanged);

@@ -5,262 +5,258 @@ using System.Text;
 using System.IO.Ports;
 using System.Threading;
 using System.Diagnostics;
+using System.Net.Sockets;
+using System.Net;
+using System.Net.NetworkInformation;
 
 namespace DreamSoft
 {
     class DCT_AP
     {
-        static CSHelper.Msg csMsg = new CSHelper.Msg();
-        static CSHelper.LOG csLog = new CSHelper.LOG();
+        private CSHelper.Msg csMsg = new CSHelper.Msg();
+        private CSHelper.LOG csLog = new CSHelper.LOG();
+        private TcpClient tcp;
+        private Socket skt;
+        private IPAddress fIPAddrSick;
+        private int PORT = 2111;
+        private readonly object myLock = new object();
 
-        public delegate void ShowMsg(string msg);
-        public static ShowMsg ThrowMsg;
-
-        public static SerialPort spDPJ;
-        //初始化
-        public static void Initial()
+        #region error
+        private const string LOGTYPE = "nav";
+        public delegate void ShowMsg(string type, string msg);
+        public static ShowMsg ThrowError;
+        private static readonly object myErrorLock = new object();
+        private string fPreErrorCode = "";
+        private void SendError(string error)
         {
-            if (spDPJ != null)
+            if (error == fPreErrorCode) return;
+            fPreErrorCode = error;
+            string errorCode = string.IsNullOrEmpty(error) ? "" : LOGTYPE + error;
+            lock (myErrorLock)
             {
-                spDPJ.Close();
-                spDPJ.Dispose();
-            }
-            try
-            {
-                spDPJ = new SerialPort(Config.Mac_A.Port_DPJ, 9600, Parity.None, 8, StopBits.One);
-                spDPJ.DtrEnable = true;
-                spDPJ.RtsEnable = true;
-                spDPJ.ReadTimeout = 500;
-                spDPJ.WriteTimeout = 500;
-                if (!spDPJ.IsOpen)
-                    spDPJ.Open();
-            }
-            catch (Exception ex)
-            {
-                csMsg.ShowWarning(ex.Message, true);
+                ThrowError?.Invoke(LOGTYPE, errorCode);
             }
         }
-
-        const string BeginString = "AA";
-        const string EndString = "CC";
-        static bool DPJIsBusy = false;
-
-        //计算FCS码
-        static string GetFCS(String value)
+        public void ClearError()
+        { fPreErrorCode = ""; }
+        #endregion
+        
+        public DCT_AP(string strIP, int port)
         {
-            int f = 0;
-            int j = value.Length;
-            for (int i = 0; i < j; i += 2)
-            {
-                int x = PLC_Tcp_AP.Get16Int(value.Substring(i, 2));
-                //每次进行异或运算
-                f = f ^ x;
-            }
-            //转换为16进制
-            return f.ToString("X");
+            fIPAddrSick = IPAddress.Parse(strIP);
+            PORT = port;
         }
-        //检查指令是否执行成功
-        static bool CheckResponse(string response ,out int err, out string errStr)
+        private bool IpIsOK(IPAddress ipa)
         {
-            bool result = true;
-            err = 0; errStr = "";
-            if (response.Length < 14)
+            bool result = false;
+            Ping pingSender = new Ping();
+            if (pingSender != null)
             {
-                err = 1;
-                result = false;
-                errStr = "数据太短";
+                try
+                {
+                    PingReply reply = pingSender.Send(ipa, 200);//第一个参数为ip地址，第二个参数为ping的时间 
+                    if (reply.Status == IPStatus.Success)
+                    {
+                        result = true;
+                    }
+                }
+                catch (Exception)
+                {
+                    SendError("");
+                }
             }
-            else if (response.Substring(response.Length - 6, 2) == "FF")
+            return result;
+        }
+        public void Initial()
+        {
+            if (IpIsOK(fIPAddrSick))
             {
-                err = 2;
-                result = false;
-                errStr = "执行错误";
+                if (tcp != null)
+                    tcp.Close();
+                if (skt != null)
+                {
+                    skt.Dispose();
+                    skt.Close();
+                }
+
+                tcp = new TcpClient();
+                try
+                {
+                    tcp.Connect(fIPAddrSick, PORT);
+                    if (tcp.Connected)
+                    {
+                        skt = tcp.Client;
+                        skt.SendTimeout = skt.ReceiveTimeout = 500;
+                        SendError("");
+
+                        blnToReceive = true;
+                        new Thread(ReceiveData) { IsBackground = true }.Start();
+                    }
+                    else
+                    {
+                        SendError("005");//连接失败
+                    }
+                }
+                catch (Exception)
+                {
+                    tcp = null; skt = null;
+                    //初始化异常
+                    SendError("002");
+                }
             }
             else
             {
-                string send = response.Substring(2, response.Length - 6);
-                string fcs = response.Substring(response.Length - 4, 2);
-                if (GetFCS(send) != fcs)
-                {
-                    err = 3;
-                    result = false;
-                    errStr = "校验错误";
-                }
+                //未检测到
+                SendError("001");
             }
-            return result;
         }
-
-        static bool SendPLC_DPJ_485(string send, string mark, out string response,out int err, out string errStr)
+        byte[] GetCRC_Check(byte[] datas)
         {
-            bool result = false;
-            err = 0; errStr = "";
-            response = "";
-            //添加起始符
-            send = PLC_Tcp_AP.Get16String(send.Length / 2 + 1, 2) + send;
-            send += GetFCS(send);
-            send = BeginString + send + EndString;
-
-            try
+            byte[] res = new byte[2];
+            //添加校验
+            ushort[] calcuDatas = new ushort[datas.Length / 2 + 1];
+            for (int i = 0; i < calcuDatas.Length; i++)
             {
-                while (DPJIsBusy)
-                    Thread.Sleep(50);
-                DPJIsBusy = true;
-                spDPJ.DiscardInBuffer();
-                spDPJ.DiscardOutBuffer();
-
-                //写入串口
-                byte[] buffer_send = PLC_Tcp_AP.GetBytes(send);
-                spDPJ.Write(buffer_send, 0, buffer_send.Length);
-
-
-                DateTime begin = DateTime.Now;
-                int m = 0, n = 0;
+                if (i == 0)
+                    calcuDatas[0] = Convert.ToUInt16(datas[0] * 256 + datas[1]);
+                else if (i == calcuDatas.Length - 1)
+                    calcuDatas[i] = 0x0000;
+                else calcuDatas[i] = Convert.ToUInt16(datas[i * 2 + 1] * 256 + datas[i * 2]);
+            }
+            ushort crc = GetCRC(calcuDatas);
+            res[0] = Convert.ToByte(crc % 256);
+            res[1] = Convert.ToByte(crc / 256);
+            return res;
+        }
+        ushort GetCRC(ushort[] pDataArray)
+        {
+            ushort shifter, c, carry;
+            ushort crc = 0;
+            for (int n = 0; n < pDataArray.Length; n++)
+            {
+                shifter = 0x8000;
+                c = pDataArray[n];
                 do
                 {
-                    Thread.Sleep(50);
-                    m = spDPJ.BytesToRead;
-                    Thread.Sleep(50);
-                    n = spDPJ.BytesToRead;
+                    carry = (ushort)(crc & 0x8000);
+                    crc <<= 1;
+                    if ((ushort)(c & shifter) > 0) crc++;
+                    if (carry > 0) crc ^= 0x1021;
+                    shifter >>= 1;
                 }
-                while ((m == 0 || m < n) && DateTime.Now <= begin.AddMilliseconds(1000));
-                if (DateTime.Now > begin.AddMilliseconds(1000))
+                while (shifter > 0);
+            }
+            return crc;
+        }
+        private bool ExecuteCmd(byte[] bts, string flag)
+        {
+            bool res = false;
+            lock (myLock)
+            {
+                try
                 {
-                    errStr = "通讯超时"; 
-                    //记录错误信息
-                    string msg = mark + ":" + errStr;
-                    csLog.WriteLog(msg);
+                    if (skt == null)
+                        Initial();
+
+                    byte[] crc = GetCRC_Check(bts);
+                    byte[] sendDatas = bts.Concat(crc).ToArray();
+                    //清空历史数据
+                    int num = skt.Available;
+                    if (num > 0)
+                    {
+                        byte[] bts_recv_dis = new byte[num];
+                        skt.Receive(bts_recv_dis);
+                    }
+                    int i = skt.Send(sendDatas);
+                    if (i > 0) res = true;
                 }
-                if (m > 0)
+                catch (Exception ex)
                 {
-                    byte[] buffer_response = new byte[m];
-                    spDPJ.Read(buffer_response, 0, m);
-                    response = PLC_Tcp_AP.GetString(buffer_response);
+                    //导航仪通讯异常
+                    SendError("003");
+                    if (ex.GetType().Equals(typeof(SocketException)))
+                        Initial();
                 }
+            }
+            return res;
+        }
 
-                DPJIsBusy = false;
-
-                if (CheckResponse(response, out err, out errStr))
-                    result = true;
+        private bool blnToReceive = false;
+        private List<byte> RecvDatas = new List<byte>();
+        private Dictionary<string, int> Dic_Pos_Num = new Dictionary<string, int>();
+        private void ReceiveData()
+        {
+            while (blnToReceive)
+            {
+                if (skt == null)
+                    Initial();
                 else
                 {
-                    //记录错误信息
-                    string msg = response + "---" + mark + ":" + errStr;
-                    csLog.WriteLog(msg);
+                    try
+                    {
+                        //接收数据
+                        int num = skt.Available;
+                        if (num > 0)
+                        {
+                            byte[] bts_recv = new byte[num];
+                            skt.Receive(bts_recv);
+                            RecvDatas.AddRange(bts_recv);
+                            bts_recv = null;
+                            //处理接收的数据
+                            if (RecvDatas.Count > 8)
+                            {
+                                for (int i = 0; i < RecvDatas.Count; i++)
+                                {
+                                    if (RecvDatas[i] == 0xA1 && i + 3 < RecvDatas.Count)//报文头，且后面有数据
+                                    {
+                                        if (RecvDatas[i + 3] == 0xFF)
+                                        {
+                                            string pos = RecvDatas[i + 2].ToString().PadLeft(2, '0') + RecvDatas[i + 1].ToString().PadLeft(2, '0');
+                                            if (Dic_Pos_Num.Keys.Contains(pos)) Dic_Pos_Num[pos] += 1;
+                                            else Dic_Pos_Num.Add(pos, 1);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        //通讯异常
+                        SendError("0003");
+                        if (ex.GetType().Equals(typeof(SocketException)))
+                            Initial();
+                    }
                 }
+                Thread.Sleep(10);
             }
-            catch (Exception ex)
-            {
-                DPJIsBusy = false;
-                //记录错误信息
-                string msg = response + "---" + mark + ":" + ex.Message;
-                csLog.WriteLog(msg);
-            }
-            return result;
         }
 
-        const string Order_Adr_Write_Master = "A0";
-        const string Order_Adr_Read_Master = "A3";
-        const string Order_DCT_Master = "A4";
-        const string Order_Record_Read_Master = "AD";
-        const string Order_Record_Write_Master = "AC";
-
-        public static bool DCTMoveDownSingle(int master, int dct, int time)
+        public bool DCTMoveDownSingle(int master, int dct, int time)
         {
             bool result = false;
-            try
-            {
-                string send = PLC_Tcp_AP.Get16String(master, 2) + Order_DCT_Master + PLC_Tcp_AP.Get16String(dct, 2) + PLC_Tcp_AP.Get16String(time / 10, 2) + PLC_Tcp_AP.Get16String(Config.Mac_A.DelayTime_Record / 10, 2) + PLC_Tcp_AP.Get16String(Config.Mac_A.StopTime_Record / 10, 2);
-                string response;
-                int err; string errStr;
-                int num = 0;
-                do
-                {
-                    num++;
-                    bool b = SendPLC_DPJ_485(send, new StackTrace().GetFrame(0).GetMethod().ToString(), out response, out err, out errStr);
-                    if (b)
-                    {
-                        result = true;
-                        break;
-                    }
-                    else if (err != 3)
-                    {
-                        result = false;
-                        //csLog.WriteLog(errStr);
-                        break;
-                    }
-                } while (err == 3 && num < 3);
-            }
-            catch (Exception ex)
-            {
-                csMsg.ShowWarning(ex.Message, true);
-            }
+            byte[] bts = new byte[9];
+            bts[0] = 0xA1;
+            bts[1] = (byte)dct;
+            bts[2] = (byte)master;
+            bts[3] = (byte)(time / 10);
+            bts[4] = 0x01;
+            bts[5] = 0x00;
+            bts[6] = 0xEF;
+            result = ExecuteCmd(bts, new StackTrace().GetFrame(0).GetMethod().ToString());
             return result;
         }
-        public static bool ReadRecordSingle(int master, int dct, out int record)
+        public bool ReadRecordSingle(int master, int dct, out int record)
         {
-            bool result = false;
-            record = -1;
-            try
-            {
-                string send = PLC_Tcp_AP.Get16String(master, 2) + Order_Record_Read_Master + PLC_Tcp_AP.Get16String(dct, 2);
-                string response;
-                int err; string errStr;
-                int num = 0;
-                do
-                {
-                    num++;
-                    bool b = SendPLC_DPJ_485(send, new StackTrace().GetFrame(0).GetMethod().ToString(), out response, out err, out errStr);
-                    if (b)
-                    {
-                        result = false;
-                        record = PLC_Tcp_AP.Get16Int(response.Substring(10, 2));
-                        break;
-                    }
-                    else if (err != 3)
-                    {
-                        result = false;
-                        //csLog.WriteLog(errStr);
-                        break;
-                    }
-                } while (err == 3 && num < 3);
-            }
-            catch (Exception ex)
-            {
-               csLog.WriteLog(ex.Message);
-            }
-            return result;
+            string pos = master.ToString().PadLeft(2, '0') + dct.ToString().PadLeft(2, '0');
+            record = Dic_Pos_Num.Keys.Contains(pos) ? Dic_Pos_Num[pos] : 0;
+            return true;
         }
-        public static bool ClearRecordSingle(int master, int dct)
+        public bool ClearRecordSingle(int master, int dct)
         {
-            bool result = false;
-            try
-            {
-                string send = PLC_Tcp_AP.Get16String(master, 2) + Order_Record_Write_Master + PLC_Tcp_AP.Get16String(dct, 2) + "00";
-                string response;
-                int err; string errStr;
-                int num = 0;
-                do
-                {
-                    num++;
-                    bool b = SendPLC_DPJ_485(send, new StackTrace().GetFrame(0).GetMethod().ToString(), out response, out err, out errStr);
-                    if (b)
-                    {
-                        result = true;
-                        break;
-                    }
-                    else if (err != 3)
-                    {
-                        result = false;
-                        //csLog.WriteLog(errStr);
-                        break;
-                    }
-                } while (err == 3 && num < 3);
-            }
-            catch (Exception ex)
-            {
-                csLog.WriteLog(ex.Message);
-            }
-            return result;
+            string pos = master.ToString().PadLeft(2, '0') + dct.ToString().PadLeft(2, '0');
+            if (Dic_Pos_Num.Keys.Contains(pos)) Dic_Pos_Num[pos] = 0;
+            return true;
         }
     }
 }
