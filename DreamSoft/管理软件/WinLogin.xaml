@@ -1,7 +1,8 @@
 ﻿<Window x:Class="DreamSoft.WinLogin"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title=" 用户登录" Width="600" Height="500" WindowStyle="None" Icon="/DreamSoft;component/Images/logo.png" ShowInTaskbar="True" Background="Transparent" AllowsTransparency="True" WindowStartupLocation="CenterScreen">
+        Title=" 用户登录" Width="600" Height="500" WindowStyle="None" Icon="/DreamSoft;component/Images/logo.png" 
+        ShowInTaskbar="True" Background="Transparent" AllowsTransparency="True" WindowStartupLocation="CenterScreen">
 
     <Grid Height="350" Width="500">
         <Grid.RowDefinitions>
