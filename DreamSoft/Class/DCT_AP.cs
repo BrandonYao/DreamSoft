@@ -15,26 +15,26 @@ namespace DreamSoft
     {
         private CSHelper.Msg csMsg = new CSHelper.Msg();
         private CSHelper.LOG csLog = new CSHelper.LOG();
-        private TcpClient tcp;
-        private Socket skt;
-        private IPAddress fIPAddrSick;
-        private int PORT = 2111;
-        private readonly object myLock = new object();
+        private static TcpClient tcp;
+        private static Socket skt;
+        private static IPAddress fIPAddrSick;
+        private static int PORT = 2111;
+        private static readonly object myLock = new object();
 
         #region error
-        private const string LOGTYPE = "nav";
-        public delegate void ShowMsg(string type, string msg);
-        public static ShowMsg ThrowError;
+        public delegate void ShowMsg(string msg);
+        public static ShowMsg ThrowMsg;
+        private const string LOGTYPE = "DCT";
         private static readonly object myErrorLock = new object();
-        private string fPreErrorCode = "";
-        private void SendError(string error)
+        private static string fPreErrorCode = "";
+        private static void SendError(string error)
         {
             if (error == fPreErrorCode) return;
             fPreErrorCode = error;
             string errorCode = string.IsNullOrEmpty(error) ? "" : LOGTYPE + error;
             lock (myErrorLock)
             {
-                ThrowError?.Invoke(LOGTYPE, errorCode);
+                ThrowMsg?.Invoke(errorCode);
             }
         }
         public void ClearError()
@@ -46,7 +46,7 @@ namespace DreamSoft
             fIPAddrSick = IPAddress.Parse(strIP);
             PORT = port;
         }
-        private bool IpIsOK(IPAddress ipa)
+        private static bool IpIsOK(IPAddress ipa)
         {
             bool result = false;
             Ping pingSender = new Ping();
@@ -67,7 +67,7 @@ namespace DreamSoft
             }
             return result;
         }
-        public void Initial()
+        public static void Initial()
         {
             if (IpIsOK(fIPAddrSick))
             {
@@ -110,7 +110,7 @@ namespace DreamSoft
                 SendError("001");
             }
         }
-        byte[] GetCRC_Check(byte[] datas)
+        private static byte[] GetCRC_Check(byte[] datas)
         {
             byte[] res = new byte[2];
             //添加校验
@@ -128,7 +128,7 @@ namespace DreamSoft
             res[1] = Convert.ToByte(crc / 256);
             return res;
         }
-        ushort GetCRC(ushort[] pDataArray)
+        private static ushort GetCRC(ushort[] pDataArray)
         {
             ushort shifter, c, carry;
             ushort crc = 0;
@@ -148,7 +148,7 @@ namespace DreamSoft
             }
             return crc;
         }
-        private bool ExecuteCmd(byte[] bts, string flag)
+        private static bool ExecuteCmd(byte[] bts, string flag)
         {
             bool res = false;
             lock (myLock)
@@ -181,10 +181,10 @@ namespace DreamSoft
             return res;
         }
 
-        private bool blnToReceive = false;
-        private List<byte> RecvDatas = new List<byte>();
-        private Dictionary<string, int> Dic_Pos_Num = new Dictionary<string, int>();
-        private void ReceiveData()
+        private static bool blnToReceive = false;
+        private static List<byte> RecvDatas = new List<byte>();
+        private static Dictionary<string, int> Dic_Pos_Num = new Dictionary<string, int>();
+        private static void ReceiveData()
         {
             while (blnToReceive)
             {
@@ -232,7 +232,7 @@ namespace DreamSoft
             }
         }
 
-        public bool DCTMoveDownSingle(int master, int dct, int time)
+        public static bool DCTMoveDownSingle(int master, int dct, int time)
         {
             bool result = false;
             byte[] bts = new byte[9];
@@ -246,13 +246,13 @@ namespace DreamSoft
             result = ExecuteCmd(bts, new StackTrace().GetFrame(0).GetMethod().ToString());
             return result;
         }
-        public bool ReadRecordSingle(int master, int dct, out int record)
+        public static bool ReadRecordSingle(int master, int dct, out int record)
         {
             string pos = master.ToString().PadLeft(2, '0') + dct.ToString().PadLeft(2, '0');
             record = Dic_Pos_Num.Keys.Contains(pos) ? Dic_Pos_Num[pos] : 0;
             return true;
         }
-        public bool ClearRecordSingle(int master, int dct)
+        public static bool ClearRecordSingle(int master, int dct)
         {
             string pos = master.ToString().PadLeft(2, '0') + dct.ToString().PadLeft(2, '0');
             if (Dic_Pos_Num.Keys.Contains(pos)) Dic_Pos_Num[pos] = 0;

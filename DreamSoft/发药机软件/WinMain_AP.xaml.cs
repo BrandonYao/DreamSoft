@@ -155,7 +155,7 @@ namespace DreamSoft
 
             PLC_Tcp_AP.ThrowMsg += new PLC_Tcp_AP.ShowMsg(MsgChanged);
             PLC_Com_AP.ThrowMsg += new PLC_Com_AP.ShowMsg(MsgChanged);
-            DCT_AP.ThrowMsg += new DPJ_AP.ShowMsg(MsgChanged);
+            DCT_AP.ThrowMsg += new DCT_AP.ShowMsg(MsgChanged);
             Scanner.ThrowMsg += new Scanner.ShowMsg(MsgChanged);
             Laser.ThrowMsg += new Laser.ShowMsg(MsgChanged);
             CSHelper.SQL.ThrowMsg += new CSHelper.SQL.ShowMsg(MsgChanged);

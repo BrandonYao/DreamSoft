@@ -34,8 +34,8 @@
             <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
         <DockPanel Grid.Column="1" Height="400" >
-            <TextBlock Text="钧盟科技" DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontSize="72" FontWeight="Bold" Foreground="Gray"></TextBlock>
-            <Image Grid.Column="1" Source="/DreamSoft;component/Images/logo.png"/>
+            <TextBlock Text="滨鸿物联" DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontSize="72" FontWeight="Bold" Foreground="Gray"></TextBlock>
+            <Image Grid.Column="1" Source="/DreamSoft;component/Images/logo2.png"/>
         </DockPanel>
     </Grid>
     

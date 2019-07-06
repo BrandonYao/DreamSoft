@@ -22,7 +22,7 @@ namespace DreamSoft
     {
         CSHelper.SQL csSql = new CSHelper.SQL();
         CSHelper.Msg csMsg = new CSHelper.Msg();
-        CSHelper.TKey csKey = new CSHelper.TKey();
+        //CSHelper.TKey csKey = new CSHelper.TKey();
 
         public string GetUserName(string code)
         {

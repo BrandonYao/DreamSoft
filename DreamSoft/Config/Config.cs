@@ -363,7 +363,7 @@ namespace DreamSoft
             Soft.MacCode = csIni.ReadIni("SOFT", "MacCode", "", file);
             Soft.Function = csIni.ReadIni("SOFT", "Function", "", file);
 
-            InitialConfig_Server();
+            //InitialConfig_Server();
         }
         public static void InitialConfig_Server()
         {
