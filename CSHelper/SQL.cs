@@ -12,6 +12,10 @@ namespace CSHelper
     {
         public delegate void ShowMsg(string msg);
         public static ShowMsg ThrowMsg;
+        private static void SendError(string str)
+        {
+            ThrowMsg?.Invoke(str);
+        }
 
         LOG log = new LOG();
 
@@ -29,7 +33,7 @@ namespace CSHelper
                 {
                     string error = ex.Message;
                     log.WriteLog(error);
-                    ThrowMsg(error);
+                    SendError(error);
                 }
             }
             return result;
@@ -57,7 +61,7 @@ namespace CSHelper
                 {
                     string error = ex.Message + "\r\n" + sql;
                     log.WriteLog(error);
-                    ThrowMsg(error);
+                    SendError(error);
                 }
             }
             return result;
@@ -88,7 +92,7 @@ namespace CSHelper
                 {
                     string error = ex.Message + "\r\n" + sql;
                     log.WriteLog(error);
-                    ThrowMsg(error);
+                    SendError(error);
                 }
             }
             return result;
@@ -117,7 +121,7 @@ namespace CSHelper
                 {
                     string error = ex.Message + "\r\n" + sql;
                     log.WriteLog(error);
-                    ThrowMsg(error);
+                    SendError(error);
                 }
             }
             return result;
@@ -173,7 +177,7 @@ namespace CSHelper
                 {
                     string error = ex.Message + "\r\n" + sql;
                     log.WriteLog(error);
-                    ThrowMsg(error);
+                    SendError(error);
                 }
             }
             return result;

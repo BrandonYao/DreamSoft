@@ -55,7 +55,7 @@ namespace DreamSoft
             public static string Port_PLC;
 
             public static string IP_DCT;
-            public static string Port_DCT;
+            //public static string Port_DCT;
 
             public static string Port_DPJ;
             public static string Port_Scanner;
@@ -330,24 +330,10 @@ namespace DreamSoft
         }
 
         public static string file = Environment.CurrentDirectory + @"\Config\config.ini";
+        private static CSHelper.LOG fLog = new CSHelper.LOG();
         //初始化配置
         public static void InitialConfig_Client()
         {
-            //Soft.Set = ConfigurationManager.AppSettings["Set"];
-
-            //Soft.Server = ConfigurationManager.AppSettings["Server"];
-            //Soft.UserID = ConfigurationManager.AppSettings["UserID"];
-            //Soft.Password = ConfigurationManager.AppSettings["Password"];
-            //Soft.Database = ConfigurationManager.AppSettings["Database"];
-
-            //Soft.ConnString = "Server=" + Soft.Server + ";User ID=" + Soft.UserID + ";Password=" + Soft.Password + ";Database=" + Soft.Database + ";connect timeout=1";
-            //Soft.ConnString_His = ConfigurationManager.AppSettings["ConnString_His"];
-
-            //Soft.SoftType = ConfigurationManager.AppSettings["Soft"];
-            //Soft.WindowNo = ConfigurationManager.AppSettings["WindowNo"];
-            //Soft.MacCode = ConfigurationManager.AppSettings["MacNo"];
-            //Soft.Function = ConfigurationManager.AppSettings["Function"];
-
             Soft.Config = csIni.ReadIni("SYS", "Config", "", file);
 
             Soft.Server = csIni.ReadIni("SYS", "Server", "", file);
@@ -389,115 +375,122 @@ namespace DreamSoft
         }
         public static void InitialConfig_Mac_A()
         {
-            DicsMac_A = ReadConfig(Soft.MacCode);
-            Mac_A.IP_PLC = DicsMac_A["IP_PLC"];
-            Mac_A.Port_PLC = DicsMac_A["Port_PLC"];
-            Mac_A.IP_DCT = DicsMac_A["IP_DCT"];
-            Mac_A.Port_DCT = DicsMac_A["Port_DCT"];
-            Mac_A.Port_DPJ = DicsMac_A["Port_DPJ"];
-            Mac_A.Port_Scanner = DicsMac_A["Port_Scanner"];
-            Mac_A.Port_Laser_Left = DicsMac_A["Port_Laser_Left"];
-            Mac_A.Port_Laser_Right = DicsMac_A["Port_Laser_Right"];
+            try
+            {
+                DicsMac_A = ReadConfig(Soft.MacCode);
+                Mac_A.IP_PLC = DicsMac_A["IP_PLC"];
+                Mac_A.Port_PLC = DicsMac_A["Port_PLC"];
+                Mac_A.IP_DCT = DicsMac_A["IP_DCT"];
+                //Mac_A.Port_DCT = DicsMac_A["Port_DCT"];
+                Mac_A.Port_DPJ = DicsMac_A["Port_DPJ"];
+                Mac_A.Port_Scanner = DicsMac_A["Port_Scanner"];
+                Mac_A.Port_Laser_Left = DicsMac_A["Port_Laser_Left"];
+                Mac_A.Port_Laser_Right = DicsMac_A["Port_Laser_Right"];
 
-            Mac_A.Length_Pos = int.Parse(DicsMac_A["Length_Pos"]);
-            Mac_A.Length_Laser = float.Parse(DicsMac_A["Length_Laser"]);
-            Mac_A.Count_Unit = int.Parse(DicsMac_A["Count_Unit"]);
-            Mac_A.Count_Lay = int.Parse(DicsMac_A["Count_Lay"]);
-            Mac_A.Count_Col = int.Parse(DicsMac_A["Count_Col"]);
+                Mac_A.Length_Pos = int.Parse(DicsMac_A["Length_Pos"]);
+                Mac_A.Length_Laser = float.Parse(DicsMac_A["Length_Laser"]);
+                Mac_A.Count_Unit = int.Parse(DicsMac_A["Count_Unit"]);
+                Mac_A.Count_Lay = int.Parse(DicsMac_A["Count_Lay"]);
+                Mac_A.Count_Col = int.Parse(DicsMac_A["Count_Col"]);
 
-            Mac_A.Speed_Manual_X = DicsMac_A["Speed_Manual_X"];
-            Mac_A.Speed_Auto_X = DicsMac_A["Speed_Auto_X"];
-            Mac_A.Speed_Manual_Z = DicsMac_A["Speed_Manual_Z"];
-            Mac_A.Speed_Auto_Z = DicsMac_A["Speed_Auto_Z"];
-            Mac_A.Speed_Manual_Plate = DicsMac_A["Speed_Manual_Plate"];
-            Mac_A.Speed_Up_Plate = DicsMac_A["Speed_Up_Plate"];
-            Mac_A.Speed_Auto_Plate = DicsMac_A["Speed_Auto_Plate"];
+                Mac_A.Speed_Manual_X = DicsMac_A["Speed_Manual_X"];
+                Mac_A.Speed_Auto_X = DicsMac_A["Speed_Auto_X"];
+                Mac_A.Speed_Manual_Z = DicsMac_A["Speed_Manual_Z"];
+                Mac_A.Speed_Auto_Z = DicsMac_A["Speed_Auto_Z"];
+                Mac_A.Speed_Manual_Plate = DicsMac_A["Speed_Manual_Plate"];
+                Mac_A.Speed_Up_Plate = DicsMac_A["Speed_Up_Plate"];
+                Mac_A.Speed_Auto_Plate = DicsMac_A["Speed_Auto_Plate"];
 
-            Mac_A.Pulse_Meet_X = DicsMac_A["Pulse_Meet_X"];
-            Mac_A.Pulse_Meet_Z = DicsMac_A["Pulse_Meet_Z"];
+                Mac_A.Pulse_Meet_X = DicsMac_A["Pulse_Meet_X"];
+                Mac_A.Pulse_Meet_Z = DicsMac_A["Pulse_Meet_Z"];
 
-            Mac_A.Pulse_Lift_Top = DicsMac_A["Pulse_Lift_Top"];
-            Mac_A.Pulse_Lift_Up = DicsMac_A["Pulse_Lift_Up"];
-            Mac_A.Pulse_Lift_Down = DicsMac_A["Pulse_Lift_Down"];
-            Mac_A.Pulse_Lift_Meet = DicsMac_A["Pulse_Lift_Meet"];
+                Mac_A.Pulse_Lift_Top = DicsMac_A["Pulse_Lift_Top"];
+                Mac_A.Pulse_Lift_Up = DicsMac_A["Pulse_Lift_Up"];
+                Mac_A.Pulse_Lift_Down = DicsMac_A["Pulse_Lift_Down"];
+                Mac_A.Pulse_Lift_Meet = DicsMac_A["Pulse_Lift_Meet"];
 
-            Mac_A.Pulse_Baffle_Open = DicsMac_A["Pulse_Baffle_Open"];
-            Mac_A.Pulse_Baffle_Close = DicsMac_A["Pulse_Baffle_Close"];
+                Mac_A.Pulse_Baffle_Open = DicsMac_A["Pulse_Baffle_Open"];
+                Mac_A.Pulse_Baffle_Close = DicsMac_A["Pulse_Baffle_Close"];
 
-            Mac_A.Speed_Auto_Lift = DicsMac_A["Speed_Auto_Lift"];
-            Mac_A.Speed_Manual_Lift = DicsMac_A["Speed_Manual_Lift"];
-            Mac_A.Speed_Auto_Baffle_Lift = DicsMac_A["Speed_Auto_Baffle_Lift"];
-            Mac_A.Speed_Manual_Baffle_Lift = DicsMac_A["Speed_Manual_Baffle_Lift"];
-            Mac_A.Speed_Auto_Baffle_Belt = DicsMac_A["Speed_Auto_Baffle_Belt"];
-            Mac_A.Speed_Manual_Baffle_Belt = DicsMac_A["Speed_Manual_Baffle_Belt"];
+                Mac_A.Speed_Auto_Lift = DicsMac_A["Speed_Auto_Lift"];
+                Mac_A.Speed_Manual_Lift = DicsMac_A["Speed_Manual_Lift"];
+                Mac_A.Speed_Auto_Baffle_Lift = DicsMac_A["Speed_Auto_Baffle_Lift"];
+                Mac_A.Speed_Manual_Baffle_Lift = DicsMac_A["Speed_Manual_Baffle_Lift"];
+                Mac_A.Speed_Auto_Baffle_Belt = DicsMac_A["Speed_Auto_Baffle_Belt"];
+                Mac_A.Speed_Manual_Baffle_Belt = DicsMac_A["Speed_Manual_Baffle_Belt"];
 
-            Mac_A.Pulse_Plate_Max_Left = DicsMac_A["Pulse_Plate_Max_Left"];
-            Mac_A.Pulse_Plate_Max_Right = DicsMac_A["Pulse_Plate_Max_Right"];
+                Mac_A.Pulse_Plate_Max_Left = DicsMac_A["Pulse_Plate_Max_Left"];
+                Mac_A.Pulse_Plate_Max_Right = DicsMac_A["Pulse_Plate_Max_Right"];
 
-            Mac_A.Acc_Manual_X = DicsMac_A["Acc_Manual_X"];
-            Mac_A.Acc_Auto_X = DicsMac_A["Acc_Auto_X"];
-            Mac_A.Acc_Manual_Z = DicsMac_A["Acc_Manual_Z"];
-            Mac_A.Acc_Auto_Z = DicsMac_A["Acc_Auto_Z"];
-            Mac_A.Acc_Manual_Plate = DicsMac_A["Acc_Manual_Plate"];
-            Mac_A.Acc_Up_Plate = DicsMac_A["Acc_Up_Plate"];
-            Mac_A.Acc_Auto_Plate = DicsMac_A["Acc_Auto_Plate"];
-            Mac_A.Acc_Manual_Lift = DicsMac_A["Acc_Manual_Lift"];
-            Mac_A.Acc_Auto_Lift = DicsMac_A["Acc_Auto_Lift"];
-            Mac_A.Acc_Manual_Baffle = DicsMac_A["Acc_Manual_Baffle"];
-            Mac_A.Acc_Auto_Baffle = DicsMac_A["Acc_Auto_Baffle"];
+                Mac_A.Acc_Manual_X = DicsMac_A["Acc_Manual_X"];
+                Mac_A.Acc_Auto_X = DicsMac_A["Acc_Auto_X"];
+                Mac_A.Acc_Manual_Z = DicsMac_A["Acc_Manual_Z"];
+                Mac_A.Acc_Auto_Z = DicsMac_A["Acc_Auto_Z"];
+                Mac_A.Acc_Manual_Plate = DicsMac_A["Acc_Manual_Plate"];
+                Mac_A.Acc_Up_Plate = DicsMac_A["Acc_Up_Plate"];
+                Mac_A.Acc_Auto_Plate = DicsMac_A["Acc_Auto_Plate"];
+                Mac_A.Acc_Manual_Lift = DicsMac_A["Acc_Manual_Lift"];
+                Mac_A.Acc_Auto_Lift = DicsMac_A["Acc_Auto_Lift"];
+                Mac_A.Acc_Manual_Baffle = DicsMac_A["Acc_Manual_Baffle"];
+                Mac_A.Acc_Auto_Baffle = DicsMac_A["Acc_Auto_Baffle"];
 
-            Mac_A.Pulse_Plate_Min_Left = DicsMac_A["Pulse_Plate_Min_Left"];
-            Mac_A.Pulse_Plate_Min_Right = DicsMac_A["Pulse_Plate_Min_Right"];
+                Mac_A.Pulse_Plate_Min_Left = DicsMac_A["Pulse_Plate_Min_Left"];
+                Mac_A.Pulse_Plate_Min_Right = DicsMac_A["Pulse_Plate_Min_Right"];
 
-            Mac_A.PlateHeight = float.Parse(DicsMac_A["PlateHeight"]);
-            Mac_A.MinCol = int.Parse(DicsMac_A["MinCol"]);
-            Mac_A.MaxCol = int.Parse(DicsMac_A["MaxCol"]);
+                Mac_A.PlateHeight = float.Parse(DicsMac_A["PlateHeight"]);
+                Mac_A.MinCol = int.Parse(DicsMac_A["MinCol"]);
+                Mac_A.MaxCol = int.Parse(DicsMac_A["MaxCol"]);
 
-            Mac_A.PLC_Tcp = DicsMac_A["PLC_Tcp"];
-            Mac_A.PLC_Com = DicsMac_A["PLC_Com"];
-            Mac_A.Scanner = DicsMac_A["Scanner"];
-            Mac_A.Laser_Left = DicsMac_A["Laser_Left"];
-            Mac_A.Laser_Right = DicsMac_A["Laser_Right"];
-            Mac_A.DPJ = DicsMac_A["DPJ"];
+                Mac_A.PLC_Tcp = DicsMac_A["PLC_Tcp"];
+                Mac_A.PLC_Com = DicsMac_A["PLC_Com"];
+                Mac_A.Scanner = DicsMac_A["Scanner"];
+                Mac_A.Laser_Left = DicsMac_A["Laser_Left"];
+                Mac_A.Laser_Right = DicsMac_A["Laser_Right"];
+                Mac_A.DPJ = DicsMac_A["DPJ"];
 
-            Mac_A.ScanSpan = int.Parse(DicsMac_A["ScanSpan"]);
-            Mac_A.WaitTime_Start = int.Parse(DicsMac_A["WaitTime_Start"]);
-            Mac_A.WaitTime_Stop = int.Parse(DicsMac_A["WaitTime_Stop"]);
+                Mac_A.ScanSpan = int.Parse(DicsMac_A["ScanSpan"]);
+                Mac_A.WaitTime_Start = int.Parse(DicsMac_A["WaitTime_Start"]);
+                Mac_A.WaitTime_Stop = int.Parse(DicsMac_A["WaitTime_Stop"]);
 
-            Mac_A.DelayTime_Record = int.Parse(DicsMac_A["DelayTime_Record"]);
-            Mac_A.StopTime_Record = int.Parse(DicsMac_A["StopTime_Record"]);
-            Mac_A.Height_BC = float.Parse(DicsMac_A["Height_BC"]);
-            Mac_A.Count_BC = int.Parse(DicsMac_A["Count_BC"]);
+                Mac_A.DelayTime_Record = int.Parse(DicsMac_A["DelayTime_Record"]);
+                Mac_A.StopTime_Record = int.Parse(DicsMac_A["StopTime_Record"]);
+                Mac_A.Height_BC = float.Parse(DicsMac_A["Height_BC"]);
+                Mac_A.Count_BC = int.Parse(DicsMac_A["Count_BC"]);
 
-            Mac_A.WaitTime_Reset_Extraman = int.Parse(DicsMac_A["WaitTime_Reset_Extraman"]);
-            Mac_A.WaitTime_Reset_Plate = int.Parse(DicsMac_A["WaitTime_Reset_Plate"]);
-            Mac_A.WaitTime_Reset_Lift = int.Parse(DicsMac_A["WaitTime_Reset_Lift"]);
-            Mac_A.WaitTime_Reset_Baffle = int.Parse(DicsMac_A["WaitTime_Reset_Baffle"]);
+                Mac_A.WaitTime_Reset_Extraman = int.Parse(DicsMac_A["WaitTime_Reset_Extraman"]);
+                Mac_A.WaitTime_Reset_Plate = int.Parse(DicsMac_A["WaitTime_Reset_Plate"]);
+                Mac_A.WaitTime_Reset_Lift = int.Parse(DicsMac_A["WaitTime_Reset_Lift"]);
+                Mac_A.WaitTime_Reset_Baffle = int.Parse(DicsMac_A["WaitTime_Reset_Baffle"]);
 
-            Mac_A.WaitTime_Auto_Extraman = int.Parse(DicsMac_A["WaitTime_Auto_Extraman"]);
-            Mac_A.WaitTime_Auto_Plate = int.Parse(DicsMac_A["WaitTime_Auto_Plate"]);
-            Mac_A.WaitTime_Auto_Lift = int.Parse(DicsMac_A["WaitTime_Auto_Lift"]);
-            Mac_A.WaitTime_Auto_Baffle = int.Parse(DicsMac_A["WaitTime_Auto_Baffle"]);
-            Mac_A.WaitTime_Up_Plate = int.Parse(DicsMac_A["WaitTime_Up_Plate"]);
+                Mac_A.WaitTime_Auto_Extraman = int.Parse(DicsMac_A["WaitTime_Auto_Extraman"]);
+                Mac_A.WaitTime_Auto_Plate = int.Parse(DicsMac_A["WaitTime_Auto_Plate"]);
+                Mac_A.WaitTime_Auto_Lift = int.Parse(DicsMac_A["WaitTime_Auto_Lift"]);
+                Mac_A.WaitTime_Auto_Baffle = int.Parse(DicsMac_A["WaitTime_Auto_Baffle"]);
+                Mac_A.WaitTime_Up_Plate = int.Parse(DicsMac_A["WaitTime_Up_Plate"]);
 
-            Mac_A.PrescWait = int.Parse(DicsMac_A["PrescWait"]);
-            Mac_A.SplitModel = DicsMac_A["SplitModel"];
-            Mac_A.PDBeforeAdd = DicsMac_A["PDBeforeAdd"];
-            Mac_A.PCNum = int.Parse(DicsMac_A["PCNum"]);
-            Mac_A.MaxNum = int.Parse(DicsMac_A["MaxNum"]);
+                Mac_A.PrescWait = int.Parse(DicsMac_A["PrescWait"]);
+                Mac_A.SplitModel = DicsMac_A["SplitModel"];
+                Mac_A.PDBeforeAdd = DicsMac_A["PDBeforeAdd"];
+                Mac_A.PCNum = int.Parse(DicsMac_A["PCNum"]);
+                Mac_A.MaxNum = int.Parse(DicsMac_A["MaxNum"]);
 
-            Mac_A.OneMMPulse_Plate = float.Parse(DicsMac_A["OneMMPulse_Plate"]);
-            Mac_A.OneMMPulse_Extraman_X = float.Parse(DicsMac_A["OneMMPulse_Extraman_X"]);
-            Mac_A.OneMMPulse_Extraman_Z = float.Parse(DicsMac_A["OneMMPulse_Extraman_Z"]);
-            Mac_A.OpenTime_Baffle = int.Parse(DicsMac_A["OpenTime_Baffle"]);
-            Mac_A.Laser_Offset_Left_X = int.Parse(DicsMac_A["Laser_Offset_Left_X"]);
-            Mac_A.Laser_Offset_Left_Z = int.Parse(DicsMac_A["Laser_Offset_Left_Z"]);
-            Mac_A.Laser_Offset_Right_X = int.Parse(DicsMac_A["Laser_Offset_Right_X"]);
-            Mac_A.Laser_Offset_Right_Z = int.Parse(DicsMac_A["Laser_Offset_Right_Z"]);
+                Mac_A.OneMMPulse_Plate = float.Parse(DicsMac_A["OneMMPulse_Plate"]);
+                Mac_A.OneMMPulse_Extraman_X = float.Parse(DicsMac_A["OneMMPulse_Extraman_X"]);
+                Mac_A.OneMMPulse_Extraman_Z = float.Parse(DicsMac_A["OneMMPulse_Extraman_Z"]);
+                Mac_A.OpenTime_Baffle = int.Parse(DicsMac_A["OpenTime_Baffle"]);
+                Mac_A.Laser_Offset_Left_X = int.Parse(DicsMac_A["Laser_Offset_Left_X"]);
+                Mac_A.Laser_Offset_Left_Z = int.Parse(DicsMac_A["Laser_Offset_Left_Z"]);
+                Mac_A.Laser_Offset_Right_X = int.Parse(DicsMac_A["Laser_Offset_Right_X"]);
+                Mac_A.Laser_Offset_Right_Z = int.Parse(DicsMac_A["Laser_Offset_Right_Z"]);
 
-            Mac_A.DrugCount = int.Parse(DicsMac_A["DrugCount"]);
-            Mac_A.DrugNum = int.Parse(DicsMac_A["DrugNum"]);
-            Mac_A.ShowTest = DicsMac_A["ShowTest"];
+                Mac_A.DrugCount = int.Parse(DicsMac_A["DrugCount"]);
+                Mac_A.DrugNum = int.Parse(DicsMac_A["DrugNum"]);
+                Mac_A.ShowTest = DicsMac_A["ShowTest"];
+            }
+            catch (Exception ex)
+            {
+                fLog.WriteLog(ex.ToString());
+            }
         }
         public static void InitialConfig_Mac_S()
         {
