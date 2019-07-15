@@ -9,12 +9,10 @@ using System.Net.Sockets;
 using System.Net;
 using System.Net.NetworkInformation;
 
-namespace DreamSoft
+namespace DCTest
 {
     class DCT_AP
     {
-        private CSHelper.Msg csMsg = new CSHelper.Msg();
-        private CSHelper.LOG csLog = new CSHelper.LOG();
         private static TcpClient tcp;
         private static Socket skt;
         private static IPAddress fIPAddrSick;
@@ -40,8 +38,10 @@ namespace DreamSoft
         public void ClearError()
         { fPreErrorCode = ""; }
         #endregion
-        
-        public DCT_AP(string strIP, int port)
+
+       private static HslCommunication.LogNet.LogNetDateTime fLog =
+            new HslCommunication.LogNet.LogNetDateTime( Environment.CurrentDirectory + @"/Log/DCT", HslCommunication.LogNet.GenerateMode.ByEveryDay);
+        public static void DCT_AP_Initial(string strIP, int port)
         {
             fIPAddrSick = IPAddress.Parse(strIP);
             PORT = port;
@@ -67,9 +67,8 @@ namespace DreamSoft
             }
             return result;
         }
-        public static void Initial()
+        private static void Initial()
         {
-            fIPAddrSick = IPAddress.Parse("192.168.1.101");
             if (IpIsOK(fIPAddrSick))
             {
                 if (tcp != null)
@@ -90,6 +89,8 @@ namespace DreamSoft
                         skt.SendTimeout = skt.ReceiveTimeout = 500;
                         SendError("");
 
+                        blnToReceive = false;
+                        Thread.Sleep(300);
                         blnToReceive = true;
                         new Thread(ReceiveData) { IsBackground = true }.Start();
                     }
@@ -111,43 +112,26 @@ namespace DreamSoft
                 SendError("001");
             }
         }
-        private static byte[] GetCRC_Check(byte[] datas)
+        private static void ModBusCRC16(ref byte[] cmd, int len)
         {
-            byte[] res = new byte[2];
-            //添加校验
-            ushort[] calcuDatas = new ushort[datas.Length / 2 + 1];
-            for (int i = 0; i < calcuDatas.Length; i++)
+            ushort i, j, tmp, CRC16;
+
+            CRC16 = 0xFFFF;             //CRC寄存器初始值
+            for (i = 0; i < len; i++)
             {
-                if (i == 0)
-                    calcuDatas[0] = Convert.ToUInt16(datas[0] * 256 + datas[1]);
-                else if (i == calcuDatas.Length - 1)
-                    calcuDatas[i] = 0x0000;
-                else calcuDatas[i] = Convert.ToUInt16(datas[i * 2 + 1] * 256 + datas[i * 2]);
-            }
-            ushort crc = GetCRC(calcuDatas);
-            res[0] = Convert.ToByte(crc % 256);
-            res[1] = Convert.ToByte(crc / 256);
-            return res;
-        }
-        private static ushort GetCRC(ushort[] pDataArray)
-        {
-            ushort shifter, c, carry;
-            ushort crc = 0;
-            for (int n = 0; n < pDataArray.Length; n++)
-            {
-                shifter = 0x8000;
-                c = pDataArray[n];
-                do
+                CRC16 ^= cmd[i];
+                for (j = 0; j < 8; j++)
                 {
-                    carry = (ushort)(crc & 0x8000);
-                    crc <<= 1;
-                    if ((ushort)(c & shifter) > 0) crc++;
-                    if (carry > 0) crc ^= 0x1021;
-                    shifter >>= 1;
+                    tmp = (ushort)(CRC16 & 0x0001);
+                    CRC16 >>= 1;
+                    if (tmp == 1)
+                    {
+                        CRC16 ^= 0xA001;    //异或多项式
+                    }
                 }
-                while (shifter > 0);
             }
-            return crc;
+            cmd[i++] = (byte)(CRC16 & 0x00FF);
+            cmd[i++] = (byte)((CRC16 & 0xFF00) >> 8);
         }
         private static bool ExecuteCmd(byte[] bts, string flag)
         {
@@ -159,8 +143,8 @@ namespace DreamSoft
                     if (skt == null)
                         Initial();
 
-                    byte[] crc = GetCRC_Check(bts);
-                    byte[] sendDatas = bts.Concat(crc).ToArray();
+                    ModBusCRC16(ref bts, 7);
+                    byte[] sendDatas = bts;
                     //清空历史数据
                     int num = skt.Available;
                     if (num > 0)
@@ -184,7 +168,7 @@ namespace DreamSoft
 
         private static bool blnToReceive = false;
         private static List<byte> RecvDatas = new List<byte>();
-        private static Dictionary<string, int> Dic_Pos_Num = new Dictionary<string, int>();
+        private static Dictionary<int, int> Dic_Pos_Num = new Dictionary<int, int>();
         private static void ReceiveData()
         {
             while (blnToReceive)
@@ -206,18 +190,29 @@ namespace DreamSoft
                             //处理接收的数据
                             if (RecvDatas.Count > 8)
                             {
+                                fLog.WriteDebug("接收\t", GetStrFromBytes(RecvDatas.ToArray()));
+                                int endIndex = 0;
                                 for (int i = 0; i < RecvDatas.Count; i++)
                                 {
-                                    if (RecvDatas[i] == 0xA1 && i + 3 < RecvDatas.Count)//报文头，且后面有数据
+                                    if (RecvDatas[i] == 0xA8 && i + 8 < RecvDatas.Count)//报文头，且后面有数据
                                     {
-                                        if (RecvDatas[i + 3] == 0xFF)
+                                        byte[] bts = new byte[9], crc = new byte[2];
+                                        RecvDatas.CopyTo(i, bts, 0, 9);
+                                        RecvDatas.CopyTo(i + 7, crc, 0, 2);
+                                        ModBusCRC16(ref bts, 7);
+                                        if (bts[7] == crc[0] && bts[8] == crc[1])//校验成功，数据完整
                                         {
-                                            string pos = RecvDatas[i + 2].ToString().PadLeft(2, '0') + RecvDatas[i + 1].ToString().PadLeft(2, '0');
-                                            if (Dic_Pos_Num.Keys.Contains(pos)) Dic_Pos_Num[pos] += 1;
-                                            else Dic_Pos_Num.Add(pos, 1);
+                                            if (RecvDatas[i + 3] == 0x01)
+                                            {
+                                                int code = RecvDatas[i + 2] * 256 + RecvDatas[i + 1];
+                                                if (Dic_Pos_Num.Keys.Contains(code)) Dic_Pos_Num[code] += 1;
+                                                else Dic_Pos_Num.Add(code, 1);
+                                            }
+                                            endIndex = i + 8;
                                         }
                                     }
                                 }
+                                RecvDatas.RemoveRange(0, endIndex + 1);
                             }
                         }
                     }
@@ -229,35 +224,52 @@ namespace DreamSoft
                             Initial();
                     }
                 }
-                Thread.Sleep(10);
+                Thread.Sleep(100);
             }
         }
 
+        private static int ColumnCount = 25;
         public static bool DCTMoveDownSingle(int master, int dct, int time)
+        {
+            int code = (master - 1) * ColumnCount + dct;
+            return DCTMoveDownSingle(code, time);
+        }
+        public static bool DCTMoveDownSingle(int code, int time)
         {
             bool result = false;
             byte[] bts = new byte[9];
-            bts[0] = 0xA1;
-            bts[1] = (byte)dct;
-            bts[2] = (byte)master;
-            bts[3] = (byte)(time / 10);
-            bts[4] = 0x01;
-            bts[5] = 0x00;
+            bts[0] = 0xA7;
+            bts[1] = (byte)(code % 256);
+            bts[2] = (byte)(code / 256);
+            bts[3] = 0x01;
+            bts[4] = (byte)(time / 10);
+            bts[5] = 0x01;
             bts[6] = 0xEF;
+            fLog.WriteDebug("指令\t", GetStrFromBytes(bts));
             result = ExecuteCmd(bts, new StackTrace().GetFrame(0).GetMethod().ToString());
             return result;
         }
         public static bool ReadRecordSingle(int master, int dct, out int record)
         {
-            string pos = master.ToString().PadLeft(2, '0') + dct.ToString().PadLeft(2, '0');
-            record = Dic_Pos_Num.Keys.Contains(pos) ? Dic_Pos_Num[pos] : 0;
+            int code = (master - 1) * ColumnCount + dct;
+            record = Dic_Pos_Num.Keys.Contains(code) ? Dic_Pos_Num[code] : 0;
             return true;
         }
         public static bool ClearRecordSingle(int master, int dct)
         {
-            string pos = master.ToString().PadLeft(2, '0') + dct.ToString().PadLeft(2, '0');
-            if (Dic_Pos_Num.Keys.Contains(pos)) Dic_Pos_Num[pos] = 0;
+            int code = (master - 1) * ColumnCount + dct;
+            if (Dic_Pos_Num.Keys.Contains(code)) Dic_Pos_Num[code] = 0;
             return true;
+        }
+
+        private static string GetStrFromBytes(byte[] bts)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (byte bt in bts)
+            {
+                sb.Append(Convert.ToString(bt, 16).PadLeft(2, '0').ToUpper() + " ");
+            }
+            return sb.ToString();
         }
     }
 }

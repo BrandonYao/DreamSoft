@@ -1,0 +1,29 @@
+﻿<Window x:Class="DCTest.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DCTest"
+        mc:Ignorable="d"
+        Title="电磁铁测试" Height="300" Width="400" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" FontSize="18">
+    
+    <Grid Margin="0,20,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="电磁铁编号:" HorizontalAlignment="Right" Margin="10,20"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="吸合时长:" HorizontalAlignment="Right" Margin="10,20"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Margin="5,10" Width="140" HorizontalAlignment="Left" VerticalContentAlignment="Center" Name="tbxCode"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="5,10" Width="140" HorizontalAlignment="Left" VerticalContentAlignment="Center" Name="tbxTime"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="(ms)" HorizontalAlignment="Right" Margin="40,0" VerticalAlignment="Center"/>
+        <Button Grid.Row="2" Grid.ColumnSpan="2" Content="测   试" Margin="10,20" Padding="15" Width="200" Click="Button_Click"/>
+    </Grid>
+</Window>

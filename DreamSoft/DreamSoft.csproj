@@ -43,7 +43,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AxInterop.ZKFPEngXControl">
-      <HintPath>bin\AxInterop.ZKFPEngXControl.dll</HintPath>
+      <HintPath>DLL\AxInterop.ZKFPEngXControl.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -63,7 +63,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsFormsIntegration" />
     <Reference Include="Wpf.TabControl">
-      <HintPath>bin\Wpf.TabControl.dll</HintPath>
+      <HintPath>DLL\Wpf.TabControl.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
