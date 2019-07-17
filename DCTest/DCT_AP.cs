@@ -18,6 +18,7 @@ namespace DCTest
         private static IPAddress fIPAddrSick;
         private static int PORT = 2111;
         private static readonly object myLock = new object();
+        public static bool IsConnected = false;
 
         #region error
         public delegate void ShowMsg(string msg);
@@ -145,22 +146,23 @@ namespace DCTest
 
                     ModBusCRC16(ref bts, 7);
                     byte[] sendDatas = bts;
-                    //清空历史数据
-                    int num = skt.Available;
-                    if (num > 0)
-                    {
-                        byte[] bts_recv_dis = new byte[num];
-                        skt.Receive(bts_recv_dis);
-                    }
                     int i = skt.Send(sendDatas);
-                    if (i > 0) res = true;
+                    if (i > 0)
+                    {
+                        res = true;
+                        IsConnected = true;
+                    }
+                    else IsConnected = false;
                 }
                 catch (Exception ex)
                 {
                     //导航仪通讯异常
                     SendError("003");
                     if (ex.GetType().Equals(typeof(SocketException)))
+                    {
+                        IsConnected = false;
                         Initial();
+                    }
                 }
             }
             return res;
@@ -183,6 +185,7 @@ namespace DCTest
                         int num = skt.Available;
                         if (num > 0)
                         {
+                            IsConnected = true;
                             byte[] bts_recv = new byte[num];
                             skt.Receive(bts_recv);
                             RecvDatas.AddRange(bts_recv);
@@ -190,7 +193,7 @@ namespace DCTest
                             //处理接收的数据
                             if (RecvDatas.Count > 8)
                             {
-                                fLog.WriteDebug("接收\t", GetStrFromBytes(RecvDatas.ToArray()));
+                                fLog.WriteDebug("接收\t", GetStrFromBytes(bts_recv.ToArray()));
                                 int endIndex = 0;
                                 for (int i = 0; i < RecvDatas.Count; i++)
                                 {
@@ -198,7 +201,9 @@ namespace DCTest
                                     {
                                         byte[] bts = new byte[9], crc = new byte[2];
                                         RecvDatas.CopyTo(i, bts, 0, 9);
+                                        fLog.WriteDebug("完整报文\t", GetStrFromBytes(bts.ToArray()));
                                         RecvDatas.CopyTo(i + 7, crc, 0, 2);
+                                        fLog.WriteDebug("校验位\t", GetStrFromBytes(crc.ToArray()));
                                         ModBusCRC16(ref bts, 7);
                                         if (bts[7] == crc[0] && bts[8] == crc[1])//校验成功，数据完整
                                         {
@@ -207,9 +212,12 @@ namespace DCTest
                                                 int code = RecvDatas[i + 2] * 256 + RecvDatas[i + 1];
                                                 if (Dic_Pos_Num.Keys.Contains(code)) Dic_Pos_Num[code] += 1;
                                                 else Dic_Pos_Num.Add(code, 1);
+                                                fLog.WriteDebug("计数成功\t" + code);
                                             }
                                             endIndex = i + 8;
                                         }
+                                        else
+                                            fLog.WriteDebug("校验失败");
                                     }
                                 }
                                 RecvDatas.RemoveRange(0, endIndex + 1);

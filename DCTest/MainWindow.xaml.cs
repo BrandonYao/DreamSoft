@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace DCTest
 {
@@ -25,9 +26,23 @@ namespace DCTest
             InitializeComponent();
         }
 
+        private IniDAL fIni;
+        private DispatcherTimer tmr_state;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            DCT_AP.DCT_AP_Initial("192.168.1.101", 2000);
+            fIni = new IniDAL(Environment.CurrentDirectory + "/config.ini");
+            string ip = fIni.ReadIni("TCP", "IP", "192.168.1.101");
+            int port = int.Parse(fIni.ReadIni("TCP", "Port", "2000"));
+            DCT_AP.DCT_AP_Initial(ip, port);
+            tmr_state = new DispatcherTimer();
+            tmr_state.Interval = TimeSpan.FromSeconds(1);
+            tmr_state.Tick += Tmr_state_Tick;
+            tmr_state.Start();
+        }
+
+        private void Tmr_state_Tick(object sender, EventArgs e)
+        {
+            elpState.Fill = DCT_AP.IsConnected ? Brushes.Green : Brushes.Red;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -35,7 +50,8 @@ namespace DCTest
             int code, time;
             if (int.TryParse(tbxCode.Text, out code) && int.TryParse(tbxTime.Text, out time))
             {
-                DCT_AP.DCTMoveDownSingle(code, time);
+                bool res = DCT_AP.DCTMoveDownSingle(code, time);
+                if(!res) MessageBox.Show("数据发送失败");
             }
             else MessageBox.Show("输入编号或时长无效");
         }

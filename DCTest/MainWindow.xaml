@@ -24,6 +24,7 @@
         <TextBox Grid.Row="0" Grid.Column="1" Margin="5,10" Width="140" HorizontalAlignment="Left" VerticalContentAlignment="Center" Name="tbxCode"/>
         <TextBox Grid.Row="1" Grid.Column="1" Margin="5,10" Width="140" HorizontalAlignment="Left" VerticalContentAlignment="Center" Name="tbxTime"/>
         <TextBlock Grid.Row="1" Grid.Column="1" Text="(ms)" HorizontalAlignment="Right" Margin="40,0" VerticalAlignment="Center"/>
-        <Button Grid.Row="2" Grid.ColumnSpan="2" Content="测   试" Margin="10,20" Padding="15" Width="200" Click="Button_Click"/>
+        <Ellipse Grid.Row="2" Grid.Column="0" Width="50" Height="50" Stroke="Black" Fill="Green" Name="elpState"/>
+        <Button Grid.Row="2" Grid.Column="1" Content="测   试" Margin="5,20" Padding="15" Width="140" Click="Button_Click" HorizontalAlignment="Left"/>
     </Grid>
 </Window>
