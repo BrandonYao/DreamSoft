@@ -18,7 +18,7 @@ namespace DCTest
         private static IPAddress fIPAddrSick;
         private static int PORT = 2111;
         private static readonly object myLock = new object();
-        public static bool IsConnected = false;
+        public static bool IsConnected { get { return tcp == null ? false : tcp.Connected; } }
 
         #region error
         public delegate void ShowMsg(string msg);
@@ -150,9 +150,7 @@ namespace DCTest
                     if (i > 0)
                     {
                         res = true;
-                        IsConnected = true;
                     }
-                    else IsConnected = false;
                 }
                 catch (Exception ex)
                 {
@@ -160,7 +158,6 @@ namespace DCTest
                     SendError("003");
                     if (ex.GetType().Equals(typeof(SocketException)))
                     {
-                        IsConnected = false;
                         Initial();
                     }
                 }
@@ -168,9 +165,15 @@ namespace DCTest
             return res;
         }
 
+        public class PosNum
+        {
+            public DateTime NumDate { get; set; }
+            public int Num { get; set; }
+        }
+
         private static bool blnToReceive = false;
         private static List<byte> RecvDatas = new List<byte>();
-        private static Dictionary<int, int> Dic_Pos_Num = new Dictionary<int, int>();
+        private static Dictionary<int, PosNum> Dic_Pos_Num = new Dictionary<int, PosNum>();
         private static void ReceiveData()
         {
             while (blnToReceive)
@@ -185,7 +188,6 @@ namespace DCTest
                         int num = skt.Available;
                         if (num > 0)
                         {
-                            IsConnected = true;
                             byte[] bts_recv = new byte[num];
                             skt.Receive(bts_recv);
                             RecvDatas.AddRange(bts_recv);
@@ -210,8 +212,12 @@ namespace DCTest
                                             if (RecvDatas[i + 3] == 0x01)
                                             {
                                                 int code = RecvDatas[i + 2] * 256 + RecvDatas[i + 1];
-                                                if (Dic_Pos_Num.Keys.Contains(code)) Dic_Pos_Num[code] += 1;
-                                                else Dic_Pos_Num.Add(code, 1);
+                                                if (Dic_Pos_Num.Keys.Contains(code))
+                                                {
+                                                    if ((DateTime.Now - Dic_Pos_Num[code].NumDate).TotalMilliseconds < 2000)
+                                                        Dic_Pos_Num[code].Num += 1;
+                                                }
+                                                else Dic_Pos_Num.Add(code, new PosNum() { Num = 1, NumDate = DateTime.Now });
                                                 fLog.WriteDebug("计数成功\t" + code);
                                             }
                                             endIndex = i + 8;
@@ -255,18 +261,27 @@ namespace DCTest
             bts[6] = 0xEF;
             fLog.WriteDebug("指令\t", GetStrFromBytes(bts));
             result = ExecuteCmd(bts, new StackTrace().GetFrame(0).GetMethod().ToString());
+            if (Dic_Pos_Num.Keys.Contains(code))
+            {
+                Dic_Pos_Num[code].NumDate = DateTime.Now; 
+            }
+            else Dic_Pos_Num.Add(code, new PosNum() { Num = 0, NumDate = DateTime.Now });
             return result;
         }
         public static bool ReadRecordSingle(int master, int dct, out int record)
         {
             int code = (master - 1) * ColumnCount + dct;
-            record = Dic_Pos_Num.Keys.Contains(code) ? Dic_Pos_Num[code] : 0;
+            return ReadRecordSingle(code, out record);
+        }
+        public static bool ReadRecordSingle(int code, out int record)
+        {
+            record = Dic_Pos_Num.Keys.Contains(code) ? Dic_Pos_Num[code].Num : 0;
             return true;
         }
         public static bool ClearRecordSingle(int master, int dct)
         {
             int code = (master - 1) * ColumnCount + dct;
-            if (Dic_Pos_Num.Keys.Contains(code)) Dic_Pos_Num[code] = 0;
+            if (Dic_Pos_Num.Keys.Contains(code)) Dic_Pos_Num.Remove(code);//直接清除得了
             return true;
         }
 

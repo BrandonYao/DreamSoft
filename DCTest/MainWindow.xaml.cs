@@ -38,11 +38,19 @@ namespace DCTest
             tmr_state.Interval = TimeSpan.FromSeconds(1);
             tmr_state.Tick += Tmr_state_Tick;
             tmr_state.Start();
+            tbkVersion.Text = "Version: " + Application.ResourceAssembly.GetName().Version.ToString();
         }
 
         private void Tmr_state_Tick(object sender, EventArgs e)
         {
             elpState.Fill = DCT_AP.IsConnected ? Brushes.Green : Brushes.Red;
+            int code, num;
+            if (int.TryParse(tbxCode.Text, out code))
+            {
+                DCT_AP.ReadRecordSingle(code, out num);
+                tbkNum.Text = string.Format("({0})", num);
+            }
+            else tbkNum.Text = "";
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
