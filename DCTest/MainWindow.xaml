@@ -5,28 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DCTest"
         mc:Ignorable="d"
-        Title="电磁铁测试" Height="310" Width="400" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" FontSize="18">
+        Title="电磁铁测试" Height="400" Width="800" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" FontSize="18">
     
     <Grid Margin="0,20,0,0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="4*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="电磁铁编号:" HorizontalAlignment="Right" Margin="10,20"/>
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="吸合时长:" HorizontalAlignment="Right" Margin="10,20"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="电磁铁编号:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,20"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="吸合时长:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,20"/>
         <TextBox Grid.Row="0" Grid.Column="1" Margin="5,10" Width="140" HorizontalAlignment="Left" VerticalContentAlignment="Center" Name="tbxCode"/>
         <TextBlock Grid.Row="0" Grid.Column="1" Text="(0)" HorizontalAlignment="Right" Margin="40,0" VerticalAlignment="Center" Name="tbkNum"/>
         <TextBox Grid.Row="1" Grid.Column="1" Margin="5,10" Width="140" HorizontalAlignment="Left" VerticalContentAlignment="Center" Name="tbxTime"/>
         <TextBlock Grid.Row="1" Grid.Column="1" Text="(ms)" HorizontalAlignment="Right" Margin="40,0" VerticalAlignment="Center"/>
         <Ellipse Grid.Row="2" Grid.Column="0" Width="50" Height="50" Stroke="Black" Fill="Green" Name="elpState"/>
-        <Button Grid.Row="2" Grid.Column="1" Content="测   试" Margin="5,20" Padding="15" Width="140" Click="Button_Click" HorizontalAlignment="Left"/>
-        <TextBlock Grid.Row="3" Grid.Column="1" Text="version" HorizontalAlignment="Right" Margin="40,0" VerticalAlignment="Center" Name="tbkVersion" FontSize="14"/>
+        <Button Grid.Row="2" Grid.Column="1" Content="测   试" Margin="5,40" Padding="15" Width="140" Click="Button_Click" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Row="3" Grid.Column="2" Text="version" HorizontalAlignment="Right" Margin="40,0" VerticalAlignment="Center" Name="tbkVersion" FontSize="14"/>
+
+        <RichTextBox Name="rtbxMsg" FontSize="14" Grid.Column="2" Grid.RowSpan="3" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,5,20,5"/>
     </Grid>
 </Window>

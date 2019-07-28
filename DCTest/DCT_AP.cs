@@ -23,21 +23,14 @@ namespace DCTest
         #region error
         public delegate void ShowMsg(string msg);
         public static ShowMsg ThrowMsg;
-        private const string LOGTYPE = "DCT";
         private static readonly object myErrorLock = new object();
-        private static string fPreErrorCode = "";
         private static void SendError(string error)
         {
-            if (error == fPreErrorCode) return;
-            fPreErrorCode = error;
-            string errorCode = string.IsNullOrEmpty(error) ? "" : LOGTYPE + error;
             lock (myErrorLock)
             {
-                ThrowMsg?.Invoke(errorCode);
+                ThrowMsg?.Invoke(error);
             }
         }
-        public void ClearError()
-        { fPreErrorCode = ""; }
         #endregion
 
        private static HslCommunication.LogNet.LogNetDateTime fLog =
@@ -63,12 +56,11 @@ namespace DCTest
                 }
                 catch (Exception)
                 {
-                    SendError("");
                 }
             }
             return result;
         }
-        private static void Initial()
+        private static bool Initial()
         {
             if (IpIsOK(fIPAddrSick))
             {
@@ -88,30 +80,31 @@ namespace DCTest
                     {
                         skt = tcp.Client;
                         skt.SendTimeout = skt.ReceiveTimeout = 500;
-                        SendError("");
 
                         blnToReceive = false;
                         Thread.Sleep(300);
                         blnToReceive = true;
                         new Thread(ReceiveData) { IsBackground = true }.Start();
+                        return true;
                     }
                     else
                     {
-                        SendError("005");//连接失败
+                        SendError("TCP链接失败");//连接失败
                     }
                 }
                 catch (Exception)
                 {
                     tcp = null; skt = null;
                     //初始化异常
-                    SendError("002");
+                    SendError("TCP初始化异常");
                 }
             }
             else
             {
                 //未检测到
-                SendError("001");
+                SendError("IP地址不通");
             }
+            return false;
         }
         private static void ModBusCRC16(ref byte[] cmd, int len)
         {
@@ -142,7 +135,10 @@ namespace DCTest
                 try
                 {
                     if (skt == null)
-                        Initial();
+                    {
+                        if (!Initial())
+                            return false;
+                    }
 
                     ModBusCRC16(ref bts, 7);
                     byte[] sendDatas = bts;
@@ -154,8 +150,8 @@ namespace DCTest
                 }
                 catch (Exception ex)
                 {
-                    //导航仪通讯异常
-                    SendError("003");
+                    //通讯异常
+                    SendError("控制板通讯异常");
                     if (ex.GetType().Equals(typeof(SocketException)))
                     {
                         Initial();
@@ -180,7 +176,7 @@ namespace DCTest
             {
                 if (skt == null)
                     Initial();
-                else
+                else if(tcp.Connected)
                 {
                     try
                     {
@@ -195,7 +191,9 @@ namespace DCTest
                             //处理接收的数据
                             if (RecvDatas.Count > 8)
                             {
-                                fLog.WriteDebug("接收\t", GetStrFromBytes(bts_recv.ToArray()));
+                                string recvStr = GetStrFromBytes(bts_recv.ToArray());
+                                fLog.WriteDebug("接收数据\t", recvStr);
+                                SendError("接收数据：" + recvStr);
                                 int endIndex = 0;
                                 for (int i = 0; i < RecvDatas.Count; i++)
                                 {
@@ -203,7 +201,9 @@ namespace DCTest
                                     {
                                         byte[] bts = new byte[9], crc = new byte[2];
                                         RecvDatas.CopyTo(i, bts, 0, 9);
-                                        fLog.WriteDebug("完整报文\t", GetStrFromBytes(bts.ToArray()));
+                                        string oneStr = GetStrFromBytes(bts.ToArray());
+                                        fLog.WriteDebug("完整报文\t", oneStr);
+                                        SendError("完整报文：" + oneStr);
                                         RecvDatas.CopyTo(i + 7, crc, 0, 2);
                                         fLog.WriteDebug("校验位\t", GetStrFromBytes(crc.ToArray()));
                                         ModBusCRC16(ref bts, 7);
@@ -219,11 +219,15 @@ namespace DCTest
                                                 }
                                                 else Dic_Pos_Num.Add(code, new PosNum() { Num = 1, NumDate = DateTime.Now });
                                                 fLog.WriteDebug("计数成功\t" + code);
+                                                SendError("计数成功\t" + code);
                                             }
                                             endIndex = i + 8;
                                         }
                                         else
+                                        {
                                             fLog.WriteDebug("校验失败");
+                                            SendError("校验失败");
+                                        }
                                     }
                                 }
                                 RecvDatas.RemoveRange(0, endIndex + 1);
@@ -233,7 +237,7 @@ namespace DCTest
                     catch (Exception ex)
                     {
                         //通讯异常
-                        SendError("0003");
+                        SendError("控制板通讯异常");
                         if (ex.GetType().Equals(typeof(SocketException)))
                             Initial();
                     }

@@ -24,6 +24,7 @@ namespace DCTest
         public MainWindow()
         {
             InitializeComponent();
+            DCT_AP.ThrowMsg += new DCT_AP.ShowMsg(ShowMsg);
         }
 
         private IniDAL fIni;
@@ -59,9 +60,20 @@ namespace DCTest
             if (int.TryParse(tbxCode.Text, out code) && int.TryParse(tbxTime.Text, out time))
             {
                 bool res = DCT_AP.DCTMoveDownSingle(code, time);
-                if(!res) MessageBox.Show("数据发送失败");
+                if(!res) ShowMsg("数据发送失败");
             }
-            else MessageBox.Show("输入编号或时长无效");
+            else ShowMsg("输入编号或时长无效");
+        }
+        private int lineNum = 0;
+        private void ShowMsg(string msg)
+        {
+            this.Dispatcher.Invoke(new Action(()=>
+            {
+                if (lineNum >= 100) { rtbxMsg.Document.Blocks.Clear(); lineNum = 0; }
+                lineNum++;
+                rtbxMsg.AppendText(string.Format("{0}({1}):\t{2}\r", DateTime.Now, lineNum,  msg));
+                rtbxMsg.ScrollToEnd();
+            }));
         }
     }
 }
