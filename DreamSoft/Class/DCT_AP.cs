@@ -13,35 +13,29 @@ namespace DreamSoft
 {
     class DCT_AP
     {
-        private CSHelper.Msg csMsg = new CSHelper.Msg();
-        private CSHelper.LOG csLog = new CSHelper.LOG();
         private static TcpClient tcp;
         private static Socket skt;
         private static IPAddress fIPAddrSick;
         private static int PORT = 2111;
         private static readonly object myLock = new object();
+        public static bool IsConnected { get { return tcp == null ? false : tcp.Connected; } }
 
         #region error
         public delegate void ShowMsg(string msg);
         public static ShowMsg ThrowMsg;
-        private const string LOGTYPE = "DCT";
         private static readonly object myErrorLock = new object();
-        private static string fPreErrorCode = "";
         private static void SendError(string error)
         {
-            if (error == fPreErrorCode) return;
-            fPreErrorCode = error;
-            string errorCode = string.IsNullOrEmpty(error) ? "" : LOGTYPE + error;
             lock (myErrorLock)
             {
-                ThrowMsg?.Invoke(errorCode);
+                ThrowMsg?.Invoke(error);
             }
         }
-        public void ClearError()
-        { fPreErrorCode = ""; }
         #endregion
-        
-        public DCT_AP(string strIP, int port)
+
+       private static HslCommunication.LogNet.LogNetDateTime fLog =
+            new HslCommunication.LogNet.LogNetDateTime( Environment.CurrentDirectory + @"/Log/DCT", HslCommunication.LogNet.GenerateMode.ByEveryDay);
+        public static void DCT_AP_Initial(string strIP, int port)
         {
             fIPAddrSick = IPAddress.Parse(strIP);
             PORT = port;
@@ -62,14 +56,12 @@ namespace DreamSoft
                 }
                 catch (Exception)
                 {
-                    SendError("");
                 }
             }
             return result;
         }
-        public static void Initial()
+        private static bool Initial()
         {
-            fIPAddrSick = IPAddress.Parse("192.168.1.101");
             if (IpIsOK(fIPAddrSick))
             {
                 if (tcp != null)
@@ -88,66 +80,52 @@ namespace DreamSoft
                     {
                         skt = tcp.Client;
                         skt.SendTimeout = skt.ReceiveTimeout = 500;
-                        SendError("");
 
+                        blnToReceive = false;
+                        Thread.Sleep(300);
                         blnToReceive = true;
                         new Thread(ReceiveData) { IsBackground = true }.Start();
+                        return true;
                     }
                     else
                     {
-                        SendError("005");//连接失败
+                        SendError("TCP链接失败");//连接失败
                     }
                 }
                 catch (Exception)
                 {
                     tcp = null; skt = null;
                     //初始化异常
-                    SendError("002");
+                    SendError("TCP初始化异常");
                 }
             }
             else
             {
                 //未检测到
-                SendError("001");
+                SendError("IP地址不通");
             }
+            return false;
         }
-        private static byte[] GetCRC_Check(byte[] datas)
+        private static void ModBusCRC16(ref byte[] cmd, int len)
         {
-            byte[] res = new byte[2];
-            //添加校验
-            ushort[] calcuDatas = new ushort[datas.Length / 2 + 1];
-            for (int i = 0; i < calcuDatas.Length; i++)
+            ushort i, j, tmp, CRC16;
+
+            CRC16 = 0xFFFF;             //CRC寄存器初始值
+            for (i = 0; i < len; i++)
             {
-                if (i == 0)
-                    calcuDatas[0] = Convert.ToUInt16(datas[0] * 256 + datas[1]);
-                else if (i == calcuDatas.Length - 1)
-                    calcuDatas[i] = 0x0000;
-                else calcuDatas[i] = Convert.ToUInt16(datas[i * 2 + 1] * 256 + datas[i * 2]);
-            }
-            ushort crc = GetCRC(calcuDatas);
-            res[0] = Convert.ToByte(crc % 256);
-            res[1] = Convert.ToByte(crc / 256);
-            return res;
-        }
-        private static ushort GetCRC(ushort[] pDataArray)
-        {
-            ushort shifter, c, carry;
-            ushort crc = 0;
-            for (int n = 0; n < pDataArray.Length; n++)
-            {
-                shifter = 0x8000;
-                c = pDataArray[n];
-                do
+                CRC16 ^= cmd[i];
+                for (j = 0; j < 8; j++)
                 {
-                    carry = (ushort)(crc & 0x8000);
-                    crc <<= 1;
-                    if ((ushort)(c & shifter) > 0) crc++;
-                    if (carry > 0) crc ^= 0x1021;
-                    shifter >>= 1;
+                    tmp = (ushort)(CRC16 & 0x0001);
+                    CRC16 >>= 1;
+                    if (tmp == 1)
+                    {
+                        CRC16 ^= 0xA001;    //异或多项式
+                    }
                 }
-                while (shifter > 0);
             }
-            return crc;
+            cmd[i++] = (byte)(CRC16 & 0x00FF);
+            cmd[i++] = (byte)((CRC16 & 0xFF00) >> 8);
         }
         private static bool ExecuteCmd(byte[] bts, string flag)
         {
@@ -157,41 +135,48 @@ namespace DreamSoft
                 try
                 {
                     if (skt == null)
-                        Initial();
-
-                    byte[] crc = GetCRC_Check(bts);
-                    byte[] sendDatas = bts.Concat(crc).ToArray();
-                    //清空历史数据
-                    int num = skt.Available;
-                    if (num > 0)
                     {
-                        byte[] bts_recv_dis = new byte[num];
-                        skt.Receive(bts_recv_dis);
+                        if (!Initial())
+                            return false;
                     }
+
+                    ModBusCRC16(ref bts, 7);
+                    byte[] sendDatas = bts;
                     int i = skt.Send(sendDatas);
-                    if (i > 0) res = true;
+                    if (i > 0)
+                    {
+                        res = true;
+                    }
                 }
                 catch (Exception ex)
                 {
-                    //导航仪通讯异常
-                    SendError("003");
+                    //通讯异常
+                    SendError("控制板通讯异常");
                     if (ex.GetType().Equals(typeof(SocketException)))
+                    {
                         Initial();
+                    }
                 }
             }
             return res;
         }
 
+        public class PosNum
+        {
+            public DateTime NumDate { get; set; }
+            public int Num { get; set; }
+        }
+
         private static bool blnToReceive = false;
         private static List<byte> RecvDatas = new List<byte>();
-        private static Dictionary<string, int> Dic_Pos_Num = new Dictionary<string, int>();
+        private static Dictionary<int, PosNum> Dic_Pos_Num = new Dictionary<int, PosNum>();
         private static void ReceiveData()
         {
             while (blnToReceive)
             {
                 if (skt == null)
                     Initial();
-                else
+                else if(tcp.Connected)
                 {
                     try
                     {
@@ -206,58 +191,112 @@ namespace DreamSoft
                             //处理接收的数据
                             if (RecvDatas.Count > 8)
                             {
+                                string recvStr = GetStrFromBytes(bts_recv.ToArray());
+                                fLog.WriteDebug("接收数据\t", recvStr);
+                                SendError("接收数据：" + recvStr);
+                                int endIndex = 0;
                                 for (int i = 0; i < RecvDatas.Count; i++)
                                 {
-                                    if (RecvDatas[i] == 0xA1 && i + 3 < RecvDatas.Count)//报文头，且后面有数据
+                                    if (RecvDatas[i] == 0xA8 && i + 8 < RecvDatas.Count)//报文头，且后面有数据
                                     {
-                                        if (RecvDatas[i + 3] == 0xFF)
+                                        byte[] bts = new byte[9], crc = new byte[2];
+                                        RecvDatas.CopyTo(i, bts, 0, 9);
+                                        string oneStr = GetStrFromBytes(bts.ToArray());
+                                        fLog.WriteDebug("完整报文\t", oneStr);
+                                        SendError("完整报文：" + oneStr);
+                                        RecvDatas.CopyTo(i + 7, crc, 0, 2);
+                                        fLog.WriteDebug("校验位\t", GetStrFromBytes(crc.ToArray()));
+                                        ModBusCRC16(ref bts, 7);
+                                        if (bts[7] == crc[0] && bts[8] == crc[1])//校验成功，数据完整
                                         {
-                                            string pos = RecvDatas[i + 2].ToString().PadLeft(2, '0') + RecvDatas[i + 1].ToString().PadLeft(2, '0');
-                                            if (Dic_Pos_Num.Keys.Contains(pos)) Dic_Pos_Num[pos] += 1;
-                                            else Dic_Pos_Num.Add(pos, 1);
+                                            if (RecvDatas[i + 3] == 0x01)
+                                            {
+                                                int code = RecvDatas[i + 2] * 256 + RecvDatas[i + 1];
+                                                if (Dic_Pos_Num.Keys.Contains(code))
+                                                {
+                                                    if ((DateTime.Now - Dic_Pos_Num[code].NumDate).TotalMilliseconds < 2000)
+                                                        Dic_Pos_Num[code].Num += 1;
+                                                }
+                                                else Dic_Pos_Num.Add(code, new PosNum() { Num = 1, NumDate = DateTime.Now });
+                                                fLog.WriteDebug("计数成功\t" + code);
+                                                SendError("计数成功\t" + code);
+                                            }
+                                            endIndex = i + 8;
+                                        }
+                                        else
+                                        {
+                                            fLog.WriteDebug("校验失败");
+                                            SendError("校验失败");
                                         }
                                     }
                                 }
+                                RecvDatas.RemoveRange(0, endIndex + 1);
                             }
                         }
                     }
                     catch (Exception ex)
                     {
                         //通讯异常
-                        SendError("0003");
+                        SendError("控制板通讯异常");
                         if (ex.GetType().Equals(typeof(SocketException)))
                             Initial();
                     }
                 }
-                Thread.Sleep(10);
+                Thread.Sleep(100);
             }
         }
 
+        private static int ColumnCount = 25;
         public static bool DCTMoveDownSingle(int master, int dct, int time)
+        {
+            int code = (master - 1) * ColumnCount + dct;
+            return DCTMoveDownSingle(code, time);
+        }
+        public static bool DCTMoveDownSingle(int code, int time)
         {
             bool result = false;
             byte[] bts = new byte[9];
-            bts[0] = 0xA1;
-            bts[1] = (byte)dct;
-            bts[2] = (byte)master;
-            bts[3] = (byte)(time / 10);
-            bts[4] = 0x01;
-            bts[5] = 0x00;
+            bts[0] = 0xA7;
+            bts[1] = (byte)(code % 256);
+            bts[2] = (byte)(code / 256);
+            bts[3] = 0x01;
+            bts[4] = (byte)(time / 10);
+            bts[5] = 0x01;
             bts[6] = 0xEF;
+            fLog.WriteDebug("指令\t", GetStrFromBytes(bts));
             result = ExecuteCmd(bts, new StackTrace().GetFrame(0).GetMethod().ToString());
+            if (Dic_Pos_Num.Keys.Contains(code))
+            {
+                Dic_Pos_Num[code].NumDate = DateTime.Now; 
+            }
+            else Dic_Pos_Num.Add(code, new PosNum() { Num = 0, NumDate = DateTime.Now });
             return result;
         }
         public static bool ReadRecordSingle(int master, int dct, out int record)
         {
-            string pos = master.ToString().PadLeft(2, '0') + dct.ToString().PadLeft(2, '0');
-            record = Dic_Pos_Num.Keys.Contains(pos) ? Dic_Pos_Num[pos] : 0;
+            int code = (master - 1) * ColumnCount + dct;
+            return ReadRecordSingle(code, out record);
+        }
+        public static bool ReadRecordSingle(int code, out int record)
+        {
+            record = Dic_Pos_Num.Keys.Contains(code) ? Dic_Pos_Num[code].Num : 0;
             return true;
         }
         public static bool ClearRecordSingle(int master, int dct)
         {
-            string pos = master.ToString().PadLeft(2, '0') + dct.ToString().PadLeft(2, '0');
-            if (Dic_Pos_Num.Keys.Contains(pos)) Dic_Pos_Num[pos] = 0;
+            int code = (master - 1) * ColumnCount + dct;
+            if (Dic_Pos_Num.Keys.Contains(code)) Dic_Pos_Num.Remove(code);//直接清除得了
             return true;
+        }
+
+        private static string GetStrFromBytes(byte[] bts)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (byte bt in bts)
+            {
+                sb.Append(Convert.ToString(bt, 16).PadLeft(2, '0').ToUpper() + " ");
+            }
+            return sb.ToString();
         }
     }
 }

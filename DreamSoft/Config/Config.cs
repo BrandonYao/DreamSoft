@@ -55,7 +55,7 @@ namespace DreamSoft
             public static string Port_PLC;
 
             public static string IP_DCT;
-            //public static string Port_DCT;
+            public static int Port_DCT;
 
             public static string Port_DPJ;
             public static string Port_Scanner;
@@ -380,8 +380,8 @@ namespace DreamSoft
                 DicsMac_A = ReadConfig(Soft.MacCode);
                 Mac_A.IP_PLC = DicsMac_A["IP_PLC"];
                 Mac_A.Port_PLC = DicsMac_A["Port_PLC"];
-                Mac_A.IP_DCT = DicsMac_A["IP_DCT"];
-                //Mac_A.Port_DCT = DicsMac_A["Port_DCT"];
+                Mac_A.IP_DCT = DicsMac_A.Keys.Contains("IP_DCT") ? DicsMac_A["IP_DCT"] : "192.168.3.200";
+                Mac_A.Port_DCT = DicsMac_A.Keys.Contains("Port_DCT") ? int.Parse(DicsMac_A["Port_DCT"]) : 2000;
                 Mac_A.Port_DPJ = DicsMac_A["Port_DPJ"];
                 Mac_A.Port_Scanner = DicsMac_A["Port_Scanner"];
                 Mac_A.Port_Laser_Left = DicsMac_A["Port_Laser_Left"];

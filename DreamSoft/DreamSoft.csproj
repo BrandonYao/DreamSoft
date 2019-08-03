@@ -45,6 +45,10 @@
     <Reference Include="AxInterop.ZKFPEngXControl">
       <HintPath>DLL\AxInterop.ZKFPEngXControl.dll</HintPath>
     </Reference>
+    <Reference Include="HslCommunication, Version=7.0.1.0, Culture=neutral, PublicKeyToken=cdb2261fa039ed67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\HslCommunication.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
@@ -547,6 +551,19 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\logo2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DB\PAS_1.mdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DB\PAS_1_1.ldf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DLL\AxInterop.ZKFPEngXControl.dll" />
+    <Content Include="DLL\HslCommunication.dll" />
+    <Content Include="DLL\Interop.ZKFPEngXControl.dll" />
+    <Content Include="DLL\RibbonControlsLibrary.dll" />
+    <Content Include="DLL\Wpf.TabControl.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

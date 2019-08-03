@@ -98,11 +98,10 @@ namespace DreamSoft
                 }
                 if (Config.Mac_A.DPJ == "Y")
                 {
-                    DCT_AP.Initial();
-                    //if (ports.Contains(Config.Mac_A.Port_DPJ))
-                    //    DPJ_AP.Initial();
-                    //else
-                    //    csMsg.ShowWarning("单片机串口不存在", true);
+                    if (ports.Contains(Config.Mac_A.IP_DCT))
+                        DCT_AP.DCT_AP_Initial(Config.Mac_A.IP_DCT, Config.Mac_A.Port_DCT);
+                    else
+                        csMsg.ShowWarning("单片机串口不存在", true);
                 }
             }
             grid_Key.Visibility = Visibility.Collapsed;
