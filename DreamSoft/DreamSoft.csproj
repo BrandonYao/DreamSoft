@@ -77,6 +77,7 @@
     </ApplicationDefinition>
     <Compile Include="Class\ColorConverter.cs" />
     <Compile Include="Class\DCT_AP.cs" />
+    <Compile Include="Class\DCT_Single.cs" />
     <Compile Include="Class\DPJ_AP.cs" />
     <Compile Include="Class\DPJ_CP.cs" />
     <Compile Include="Class\Laser.cs" />
@@ -141,6 +142,9 @@
     </Compile>
     <Compile Include="发药机软件\出药\UCOut_Manual.xaml.cs">
       <DependentUpon>UCOut_Manual.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="发药机软件\出药\WinTest_DCT.xaml.cs">
+      <DependentUpon>WinTest_DCT.xaml</DependentUpon>
     </Compile>
     <Compile Include="发药机软件\加药\UCAdd.xaml.cs">
       <DependentUpon>UCAdd.xaml</DependentUpon>
@@ -282,6 +286,10 @@
     <Page Include="发药机软件\出药\UCOut_Manual.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="发药机软件\出药\WinTest_DCT.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="发药机软件\加药\UCAdd.xaml">
       <Generator>MSBuild:Compile</Generator>

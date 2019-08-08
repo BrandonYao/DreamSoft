@@ -218,7 +218,7 @@ namespace DreamSoft
                 catch (Exception ex)
                 {
                     string msg = mark + ":" + ex.Message;
-                    if(ex.GetType().Equals(typeof(System.Net.Sockets.SocketException)))
+                    if (ex.GetType().Equals(typeof(System.Net.Sockets.SocketException)))
                     {
                         Initial(false);
                     }
@@ -1867,12 +1867,13 @@ where di.drugonlycode=dp.drugonlycode and dp.maccode='{0}' and dp.poscode='{1}'"
             if (!string.IsNullOrEmpty(v))
                 t = int.Parse(v);
 
-            int master = int.Parse(poscode.Substring(1, 2));
-            int dct = int.Parse(poscode.Substring(3, 2));
-            if (DCT_AP.DCTMoveDownSingle(master, dct, t))
+            int unit = int.Parse(poscode.Substring(0, 1)),
+                master = int.Parse(poscode.Substring(1, 2)),
+                dct = int.Parse(poscode.Substring(3, 2));
+            if (DCT_AP.DCTMoveDownSingle(unit, master, dct, t))
             {
                 //弹跳成功，记录次数
-                sql = "update sys_posinfo set record=(record+1) where maccode='{0}' and poscode='{1}'"; 
+                sql = "update sys_posinfo set record=(record+1) where maccode='{0}' and poscode='{1}'";
                 sql = string.Format(sql, Config.Soft.MacCode, poscode);
                 csSql.ExecuteScalar(sql, Config.Soft.ConnString, out v);
             }
@@ -1898,12 +1899,11 @@ where di.drugonlycode=dp.drugonlycode and dp.maccode='{0}' and dp.poscode='{1}'"
         //读取单独计数
         public static int ReadRecordSingle(string poscode)
         {
-            int master = int.Parse(poscode.Substring(1, 2));
-            int dct = int.Parse(poscode.Substring(3, 2));
+            int unit = int.Parse(poscode.Substring(0, 1)),
+                master = int.Parse(poscode.Substring(1, 2)),
+                dct = int.Parse(poscode.Substring(3, 2));
             int num;
-            if (!DCT_AP.ReadRecordSingle(master, dct, out num))
-            {
-            }
+            DCT_AP.ReadRecordSingle(unit, master, dct, out num);
             return num;
         }
         //读取多个计数
@@ -1925,11 +1925,10 @@ where di.drugonlycode=dp.drugonlycode and dp.maccode='{0}' and dp.poscode='{1}'"
         //单独计数器清零
         public static void ClearRecordSingle(string poscode)
         {
-            int master = int.Parse(poscode.Substring(1, 2));
-            int dct = int.Parse(poscode.Substring(3, 2));
-            if (!DCT_AP.ClearRecordSingle(master, dct))
-            {
-            }
+            int unit = int.Parse(poscode.Substring(0, 1)),
+                master = int.Parse(poscode.Substring(1, 2)),
+                dct = int.Parse(poscode.Substring(3, 2));
+            DCT_AP.ClearRecordSingle(unit, master, dct);
         }
         //多个计数器清零
         public static void ClearRecordMutil(List<string> poss)
@@ -2166,7 +2165,7 @@ where di.drugonlycode=dp.drugonlycode and dp.maccode='{0}' and dp.poscode='{1}'"
             {
                 string s = "select posmaxwidth from sys_posinfo where maccode='{0}' and poscode='{1}'";
                 s = string.Format(s, Config.Soft.MacCode, posCode);
-                string v; 
+                string v;
                 csSql.ExecuteScalar(s, Config.Soft.ConnString, out v);
                 if (!string.IsNullOrEmpty(v))
                 {

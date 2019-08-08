@@ -81,7 +81,7 @@ namespace DreamSoft
                     else
                         csMsg.ShowWarning("左侧激光串口不存在", true);
                 }
-                if(Config.Mac_A.Laser_Right == "Y")
+                if (Config.Mac_A.Laser_Right == "Y")
                 {
                     if (ports.Contains(Config.Mac_A.Port_Laser_Right))
                         Laser.InitialLaserPort_Right();
@@ -94,14 +94,14 @@ namespace DreamSoft
                 if (Config.Mac_A.PLC_Com == "Y")
                 {
                     if (ports.Contains(Config.Mac_A.Port_PLC))
-                    PLC_Com_AP.Initial();
+                        PLC_Com_AP.Initial();
                 }
                 if (Config.Mac_A.DPJ == "Y")
                 {
-                    if (ports.Contains(Config.Mac_A.IP_DCT))
-                        DCT_AP.DCT_AP_Initial(Config.Mac_A.IP_DCT, Config.Mac_A.Port_DCT);
-                    else
-                        csMsg.ShowWarning("单片机串口不存在", true);
+                    //if (ports.Contains(Config.Mac_A.IP_DCT))
+                    DCT_AP.DCT_AP_Initial(Config.Soft.ConnString, Config.Mac_A.Count_Col);
+                    //else
+                    //    csMsg.ShowWarning("单片机串口不存在", true);
                 }
             }
             grid_Key.Visibility = Visibility.Collapsed;
@@ -110,7 +110,7 @@ namespace DreamSoft
         public delegate void DelMsgChanged(string msg);
         public void MsgChanged(string msg)
         {
-            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate()
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate ()
             {
                 Msg.ShowMsg(msg, Colors.Red);
             });
@@ -124,8 +124,8 @@ namespace DreamSoft
             else grid_Key.Visibility = Visibility.Collapsed;
         }
 
-         bool gm_old = false;
-         bool gm_new = false;
+        bool gm_old = false;
+        bool gm_new = false;
 
         bool stop_old = false;
         bool stop_new = false;
@@ -171,7 +171,7 @@ namespace DreamSoft
                 tb_GM.Visibility = Visibility.Collapsed;
             }
 
-            if(csMsg.ShowQuestion("设备在断电后的第一次启动时，运动部件需要原点复位。\r\n是否要原点复位？",false))
+            if (csMsg.ShowQuestion("设备在断电后的第一次启动时，运动部件需要原点复位。\r\n是否要原点复位？", false))
             {
                 if (Config.Soft.Function == "I")
                 {
@@ -181,7 +181,7 @@ namespace DreamSoft
                 }
                 else
                 {
-                    PLC_Tcp_AP.LiftOriginReset(); 
+                    PLC_Tcp_AP.LiftOriginReset();
                     Thread.Sleep(1000);
                     PLC_Com_AP.BaffleOriginReset_Lift();
                 }

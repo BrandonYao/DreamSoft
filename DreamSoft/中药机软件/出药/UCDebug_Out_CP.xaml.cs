@@ -58,9 +58,9 @@ namespace DreamSoft
             tbOpen.Text = Config.Mac_C.Pulse_Baffle_Open;
             tbClose.Text = Config.Mac_C.Pulse_Baffle_Close;
 
-            if (Config.Mac_C.ShowTest == "Y")
-                gbTest.Visibility = Visibility.Visible;
-            else gbTest.Visibility = Visibility.Hidden;
+            //if (Config.Mac_C.ShowTest == "Y")
+            //    gbTest.Visibility = Visibility.Visible;
+            //else gbTest.Visibility = Visibility.Hidden;
         }
 
         private void btTransfer_Turn_Click(object sender, RoutedEventArgs e)

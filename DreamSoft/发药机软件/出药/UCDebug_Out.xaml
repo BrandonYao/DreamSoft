@@ -78,12 +78,12 @@
                 <TabItem Header="  传 送 带 + 提 升 机  " FontSize="18" FontWeight="Bold">
                     <Border CornerRadius="5" Padding="5">
                         <Grid>
-                           
+
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="400"></ColumnDefinition>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            
+
                             <Grid Grid.Column="0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"></RowDefinition>
@@ -92,49 +92,49 @@
                                     <RowDefinition Height="*"></RowDefinition>
                                     <RowDefinition Height="*"></RowDefinition>
                                 </Grid.RowDefinitions>
-                            
+
                                 <GroupBox Header="出药皮带" Margin="5">
-                                <Grid >
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
-                                    </Grid.ColumnDefinitions>
-                                    <Button Width="100" Height="50" Foreground="Crimson" Click="btTransfer_Turn_Click" Name="btBelt_Out_Start">转 动</Button>
-                                    <Button Grid.Column="1" Width="100" Height="50" Click="btTransfer_Stop_Click" Name="btBelt_Out_Stop">停 止</Button>
-                                </Grid>
-                            </GroupBox>
+                                    <Grid >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Width="100" Height="50" Foreground="Crimson" Click="btTransfer_Turn_Click" Name="btBelt_Out_Start">转 动</Button>
+                                        <Button Grid.Column="1" Width="100" Height="50" Click="btTransfer_Stop_Click" Name="btBelt_Out_Stop">停 止</Button>
+                                    </Grid>
+                                </GroupBox>
 
                                 <GroupBox Grid.Row="1" Header="窗口皮带" Margin="5">
-                                <Grid >
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
-                                    </Grid.ColumnDefinitions>
-                                    <Button Width="100" Height="50" Foreground="Crimson" Click="btTop_Turn_Click" Name="btBelt_Win_Start">转 动</Button>
-                                    <Button Grid.Column="1" Width="100" Height="50" Click="btTop_Stop_Click" Name="btBelt_Win_Stop">停 止</Button>
-                                </Grid>
-                            </GroupBox>
+                                    <Grid >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Width="100" Height="50" Foreground="Crimson" Click="btTop_Turn_Click" Name="btBelt_Win_Start">转 动</Button>
+                                        <Button Grid.Column="1" Width="100" Height="50" Click="btTop_Stop_Click" Name="btBelt_Win_Stop">停 止</Button>
+                                    </Grid>
+                                </GroupBox>
 
                                 <GroupBox Header="虚拟处方" Grid.Row="4" Grid.Column="0" Margin="0,5,0,0" Visibility="Hidden" MaxHeight="120">
-                                <Grid >
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
-                                    </Grid.ColumnDefinitions>
-                                    <Button Width="100" Height="50" Foreground="Crimson" Click="btStart_Click" Name="btPresc_Start">开 始</Button>
-                                    <Button Grid.Column="1" Width="100" Height="50" Click="btStop_Click" Name="btPresc_Stop">停 止</Button>
-                                </Grid>
-                            </GroupBox>
+                                    <Grid >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Width="100" Height="50" Foreground="Crimson" Click="btStart_Click" Name="btPresc_Start">开 始</Button>
+                                        <Button Grid.Column="1" Width="100" Height="50" Click="btStop_Click" Name="btPresc_Stop">停 止</Button>
+                                    </Grid>
+                                </GroupBox>
                             </Grid>
-                            
+
                             <GroupBox Grid.Column="1" Margin="5" Header="提升机">
                                 <Grid>
-                                <Grid.RowDefinitions>
+                                    <Grid.RowDefinitions>
                                         <RowDefinition Height="*"></RowDefinition>
                                         <RowDefinition Height="2.5*"></RowDefinition>
                                         <RowDefinition Height="3*"></RowDefinition>
-                                </Grid.RowDefinitions>
-                                    
+                                    </Grid.RowDefinitions>
+
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -188,7 +188,7 @@
                                     </Grid>
                                 </Grid>
                             </GroupBox>
-                                
+
                         </Grid>
                     </Border>
                 </TabItem>
@@ -240,7 +240,7 @@
                                 <TextBox Grid.Row="1" Grid.Column="1" Margin="8" FontSize="20" Style="{StaticResource centerBox}" Name="tbClose"></TextBox>
                                 <Button Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" Margin="10,5" Width="100" Foreground="Crimson" Click="btBaffle_Lift_Run_Close_Click">运 行</Button>
                                 <Button Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center" Margin="10,5" Width="100" Click="btBaffle_Lift_Save_Close_Click">保 存</Button>
-                               
+
                             </Grid>
                         </Grid>
                     </GroupBox>
@@ -303,21 +303,23 @@
                                     <ComboBoxItem Content="22" />
                                 </ComboBox>
                             </Grid>
-                            
-                            <GroupBox Grid.Row="2" Grid.RowSpan="3" Header="可靠性测试" FontSize="18" Name="gbTest">
+
+                            <GroupBox Grid.Row="2" Grid.RowSpan="3" Header="当前层循环测试" FontSize="18" Name="gbTest">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="2*" />
                                         <RowDefinition Height="2*" />
                                     </Grid.RowDefinitions>
-                                    <TextBlock Name="tbNum" Text="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10"></TextBlock>
-                                   
+                                    <WrapPanel>
+                                        <TextBlock Text="循环次数：" VerticalAlignment="Center" Margin="10,0"/>
+                                        <TextBlock Name="tbNum" Text="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10"/>
+                                    </WrapPanel>
                                     <Button Content="开 始" Grid.Row="1" Margin="30,10" FontSize="18" Click="btTest_Start_Click"></Button>
                                     <Button Content="停 止" Grid.Row="2" Margin="30,10" FontSize="18" Click="btTest_Stop_Click"></Button>
                                 </Grid>
                             </GroupBox>
-
+                            <Button Content="自动测试" Grid.Row="5" Margin="20,10" FontSize="18" Click="btTest_Auto_Click"></Button>
                             <!--TextBlock Grid.Row="2" Foreground="Black" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16">鼠标左键：弹跳</TextBlock-->
                             <!--TextBlock Grid.Row="3" Foreground="Black" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16">鼠标右键：读数</TextBlock-->
                             <!--TextBlock Grid.Row="4" Foreground="Black" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16">鼠标中键：清零</TextBlock-->
@@ -336,25 +338,24 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Border  Grid.Row="0" Grid.Column="0" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border Grid.Row="0" Grid.Column="0" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
                                 <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Button Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Content="01" Tag="01" Margin="5" FontSize="24" Click="btPos_DCT_Click" />
-                                <Button Grid.Row="0" Grid.Column="1" Grid.RowSpan="1" Content="0" Tag="01" Margin="5" FontSize="24" Click="btPos_ReadRecord_Click" />
-                                <Button Grid.Row="1" Grid.Column="1" Grid.RowSpan="1" Content="清零" Tag="01" Margin="5" FontSize="18" Click="btPos_ClearRecord_Click" />
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Content="01" Tag="01" Margin="5" FontSize="24" Click="btPos_DCT_Click" />
+                                    <Button Grid.Row="0" Grid.Column="1" Grid.RowSpan="1" Content="0" Tag="01" Margin="5" FontSize="24" Click="btPos_ReadRecord_Click" />
+                                    <Button Grid.Row="1" Grid.Column="1" Grid.RowSpan="1" Content="清零" Tag="01" Margin="5" FontSize="18" Click="btPos_ClearRecord_Click" />
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="0" Grid.Column="1" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border Grid.Row="0" Grid.Column="1" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -370,7 +371,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="0" Grid.Column="2" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border Grid.Row="0" Grid.Column="2" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -386,7 +387,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="0" Grid.Column="3" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border Grid.Row="0" Grid.Column="3" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -402,7 +403,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="0" Grid.Column="4" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border Grid.Row="0" Grid.Column="4" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -418,7 +419,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="0" Grid.Column="5" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border Grid.Row="1" Grid.Column="0" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -434,7 +435,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="1" Grid.Column="0" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border Grid.Row="1" Grid.Column="1" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -450,7 +451,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="1" Grid.Column="1" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border Grid.Row="1" Grid.Column="2" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -466,7 +467,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="1" Grid.Column="2" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border Grid.Row="1" Grid.Column="3" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -482,7 +483,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="1" Grid.Column="3" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border Grid.Row="1" Grid.Column="4" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -498,7 +499,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="1" Grid.Column="4" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border Grid.Row="2" Grid.Column="0" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -514,7 +515,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="1" Grid.Column="5" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border Grid.Row="2" Grid.Column="1" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -530,7 +531,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="2" Grid.Column="0" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border Grid.Row="2" Grid.Column="2" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -546,7 +547,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="2" Grid.Column="1" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border Grid.Row="2" Grid.Column="3" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -562,7 +563,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="2" Grid.Column="2" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border Grid.Row="2" Grid.Column="4" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -578,7 +579,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="2" Grid.Column="3" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border Grid.Row="3" Grid.Column="0" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -594,7 +595,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="2" Grid.Column="4" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border Grid.Row="3" Grid.Column="1" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -610,7 +611,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="2" Grid.Column="5" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border Grid.Row="3" Grid.Column="2" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -626,7 +627,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="3" Grid.Column="0" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border Grid.Row="3" Grid.Column="3" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -642,7 +643,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="3" Grid.Column="1" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border Grid.Row="3" Grid.Column="4" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -658,7 +659,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="3" Grid.Column="2" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border  Grid.Row="3" Grid.Column="2" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10" Visibility="Hidden">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -674,7 +675,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="3" Grid.Column="3" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border  Grid.Row="3" Grid.Column="3" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10" Visibility="Hidden">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -690,7 +691,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border  Grid.Row="3" Grid.Column="4" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10">
+                            <Border  Grid.Row="3" Grid.Column="4" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="10" Visibility="Hidden">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -706,12 +707,14 @@
                                     <Button Grid.Row="1" Grid.Column="1" Grid.RowSpan="1" Content="清零" Tag="23" Margin="5" FontSize="18" Click="btPos_ClearRecord_Click" />
                                 </Grid>
                             </Border>
-
-                            <TextBlock Name="tbRecord" Text="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3" Grid.Row="4" Grid.ColumnSpan="6"></TextBlock>
+                            <WrapPanel Grid.Row="4" Grid.ColumnSpan="6">
+                                <TextBlock Text="计数情况：" VerticalAlignment="Center" Margin="10,0"/>
+                                <TextBlock Name="tbRecord" Text="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3"/>
+                            </WrapPanel>
                         </Grid>
                     </Grid>
                 </TabItem>
-                
+
             </TabControl.Items>
         </TabControl>
     </Border>

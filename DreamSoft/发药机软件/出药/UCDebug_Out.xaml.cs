@@ -43,6 +43,7 @@ namespace DreamSoft
             timer_Presc.Tick += new EventHandler(timer_Presc_Tick);
 
             timer_Test.Tick += new EventHandler(timer_Test_Tick);
+            timer_Test.Interval = TimeSpan.FromSeconds(5);
 
             cbLayer.SelectedIndex = 0;
             if (Config.Mac_A.PLC_Tcp == "Y")
@@ -58,9 +59,9 @@ namespace DreamSoft
             tbOpen.Text = Config.Mac_A.Pulse_Baffle_Open;
             tbClose.Text = Config.Mac_A.Pulse_Baffle_Close;
 
-            if (Config.Mac_A.ShowTest == "Y")
-                gbTest.Visibility = Visibility.Visible;
-            else gbTest.Visibility = Visibility.Hidden;
+            //if (Config.Mac_A.ShowTest == "Y")
+            //    gbTest.Visibility = Visibility.Visible;
+            //else gbTest.Visibility = Visibility.Hidden;
         }
 
         private void btTransfer_Turn_Click(object sender, RoutedEventArgs e)
@@ -447,12 +448,12 @@ namespace DreamSoft
             string unit = cbUnit.Text;
             string lay = cbLayer.Text;
             string record = "";
-            for (int i = 23; i >= 1; i--)
+            for (int i = 20; i >= 1; i--)
             {
                 string pos = unit + lay + i.ToString().PadLeft(2, '0');
                 PLC_Tcp_AP.DCTMoveDownSingle(pos);
-                Thread.Sleep(100);
-                record += PLC_Tcp_AP.ReadRecordSingle(pos) + " ";
+                Thread.Sleep(1000);
+                record += string.Format("{0}-{1} | ", i, PLC_Tcp_AP.ReadRecordSingle(pos));
                 Thread.Sleep(100);
             }
             tbRecord.Text = record;
@@ -461,19 +462,23 @@ namespace DreamSoft
         }
         void timer_Test_Tick(object sender, EventArgs e)
         {
+            timer_Test.Stop();
             Test();
+            timer_Test.Start();
         }
         private void btTest_Start_Click(object sender, RoutedEventArgs e)
         {
             Test();
-            timer_Test.Interval = TimeSpan.FromSeconds(20);
             timer_Test.Start();
         }
         private void btTest_Stop_Click(object sender, RoutedEventArgs e)
         {
             timer_Test.Stop();
         }
-
+        private void btTest_Auto_Click(object sender, RoutedEventArgs e)
+        {
+            new WinTest_DCT().ShowDialog();
+        }
 
         #region"随机姓名"
         string[] FirstNames = new string[]{
@@ -525,5 +530,6 @@ namespace DreamSoft
             return FirstNames[rd.Next(FirstNames.Length)] + SecondNames[rd.Next(SecondNames.Length)];
         }
         #endregion
+
     }
 }
