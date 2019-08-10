@@ -45,6 +45,7 @@ namespace DreamSoft
             timer_Test.Tick += new EventHandler(timer_Test_Tick);
             timer_Test.Interval = TimeSpan.FromSeconds(5);
 
+            LoadLayer();
             cbLayer.SelectedIndex = 0;
             if (Config.Mac_A.PLC_Tcp == "Y")
                 tbPulse_Lift_Now.Text = PLC_Tcp_AP.ReadLiftPulse().ToString();
@@ -62,6 +63,13 @@ namespace DreamSoft
             //if (Config.Mac_A.ShowTest == "Y")
             //    gbTest.Visibility = Visibility.Visible;
             //else gbTest.Visibility = Visibility.Hidden;
+        }
+        private void LoadLayer()
+        {
+            for (int i = 1; i <= Config.Mac_A.Count_Lay; i++)
+            {
+                cbLayer.Items.Add(i.ToString().PadLeft(2, '0'));
+            }
         }
 
         private void btTransfer_Turn_Click(object sender, RoutedEventArgs e)
@@ -85,7 +93,7 @@ namespace DreamSoft
             btBelt_Win_Start.IsEnabled = true; btBelt_Win_Stop.IsEnabled = false;
             PLC_Tcp_AP.TopBeltMove(PLC_Tcp_AP.TopBeltMoveType.Stop);
         }
-       
+
         private void btZero_Click(object sender, RoutedEventArgs e)
         {
             Cursor = Cursors.Wait;
@@ -94,9 +102,9 @@ namespace DreamSoft
                 DateTime timeBegin = DateTime.Now;
                 Thread.Sleep(1000);
 
-                while(! PLC_Tcp_AP.LiftOriginResetIsOK())
+                while (!PLC_Tcp_AP.LiftOriginResetIsOK())
                 {
-                    if(DateTime.Now > timeBegin.AddSeconds(Config.Mac_A.WaitTime_Reset_Lift))
+                    if (DateTime.Now > timeBegin.AddSeconds(Config.Mac_A.WaitTime_Reset_Lift))
                         break;
                     Thread.Sleep(500);
                 }
@@ -310,7 +318,7 @@ namespace DreamSoft
                     s = "insert into pat_druginfo(prescno,drugonlycode,drugnum,drugunit,doflag) select '{0}','{1}','{2}',drugpackunit,'N' from drug_info where drugonlycode='{1}'";
                     sql += string.Format(s, prescNo, drugonlycode, count);
                 }
-                if(csSql.ExecuteSql(sql, Config.Soft.ConnString))
+                if (csSql.ExecuteSql(sql, Config.Soft.ConnString))
                     csMsg.ShowInfo("生成处方", false);
             }
             else
@@ -334,7 +342,7 @@ namespace DreamSoft
 
                 if (PLC_Com_AP.BaffleOriginResetIsOK())
                 {
-                    csMsg.ShowInfo("原点返回完成", false); 
+                    csMsg.ShowInfo("原点返回完成", false);
                     tbPulse_Baffle_Lift_Now.Text = PLC_Com_AP.ReadBafflePulse_Lift().ToString();
                 }
                 else
@@ -510,23 +518,23 @@ namespace DreamSoft
                                "宰父","谷粱","晋","楚","闫","法","汝","鄢","涂","钦","段干","百里","东郭","南门",
                                "呼延","归海","羊舌","微生","岳","帅","缑","亢","况","郈","有","琴","梁丘","左丘",
                                "东门","西门","商","牟","佘","佴","伯","赏","宫","墨","哈","谯","笪","年","爱","阳","佟",
-                               "第五","言福"       
+                               "第五","言福"
                              };
         string[] SecondNames = new string[]{
                                   "白", "赤", "凉", "靖", "剑", "谙", "仪", "翔", "遐", "翚", "桓", "鸠", "梅", "美", "笛", "古",
-                                  "弘", "勋", "秀", "晴", "子", "竞", "溢", "澜", "云", "启", "宣", "恭", "劲", "聪", "冀", "洪", 
-                                  "景", "炎", "昌", "久", "零", "落", "千", "言", "弼", "光", "缘", "逸", "欣", "宥", "远", "霞", 
-                                  "碧", "空", "长", "虹", "耀", "月", "鹏", "飞", "宗", "翰", "毓", "灵", "星", "辉", "辅", "国", 
-                                  "靖", "初", "君", "让", "昭", "寒", "攸", "讳", "天", "佑", "晨", "曦", "北", "辰", "敬", "弦", 
-                                  "起", "乾", "承", "嗣", "云", "啸", "海", "潜", "百", "炼", "万", "言", "炳", "之", "语", "晴", 
-                                  "无", "咎", "不", "疑", "复", "生", "鸢", "戾", "申", "曦", "益", "川", "休", "雨", "毅", "玄", 
-                                  "宏", "述", "汤", "浩", "震", "岳", "晓", "岚", "天", "邃", "之", "嘉", "鲲", "鹏", "颜", "承", 
-                                  "若", "子", "谅", "霖", "朔", "风", "凯", "逍", "遥", "欢", "芷", "庆", "哲", "有", "涯", "公", 
-                                  "焕", "海", "程", "城", "龙", "雪", "君" 
+                                  "弘", "勋", "秀", "晴", "子", "竞", "溢", "澜", "云", "启", "宣", "恭", "劲", "聪", "冀", "洪",
+                                  "景", "炎", "昌", "久", "零", "落", "千", "言", "弼", "光", "缘", "逸", "欣", "宥", "远", "霞",
+                                  "碧", "空", "长", "虹", "耀", "月", "鹏", "飞", "宗", "翰", "毓", "灵", "星", "辉", "辅", "国",
+                                  "靖", "初", "君", "让", "昭", "寒", "攸", "讳", "天", "佑", "晨", "曦", "北", "辰", "敬", "弦",
+                                  "起", "乾", "承", "嗣", "云", "啸", "海", "潜", "百", "炼", "万", "言", "炳", "之", "语", "晴",
+                                  "无", "咎", "不", "疑", "复", "生", "鸢", "戾", "申", "曦", "益", "川", "休", "雨", "毅", "玄",
+                                  "宏", "述", "汤", "浩", "震", "岳", "晓", "岚", "天", "邃", "之", "嘉", "鲲", "鹏", "颜", "承",
+                                  "若", "子", "谅", "霖", "朔", "风", "凯", "逍", "遥", "欢", "芷", "庆", "哲", "有", "涯", "公",
+                                  "焕", "海", "程", "城", "龙", "雪", "君"
                               };
         private string GetName()
         {
-            Random rd=new Random();
+            Random rd = new Random();
             return FirstNames[rd.Next(FirstNames.Length)] + SecondNames[rd.Next(SecondNames.Length)];
         }
         #endregion

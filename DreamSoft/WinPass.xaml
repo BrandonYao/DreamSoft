@@ -1,0 +1,20 @@
+﻿<Window x:Class="DreamSoft.WinPass"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DreamSoft"
+        mc:Ignorable="d"
+        Title="输入密码" Height="200" Width="300" FontSize="18" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="密码：" VerticalAlignment="Center"/>
+            <PasswordBox MinWidth="150" Margin="10" HorizontalContentAlignment="Center" FontSize="22" Name="tbxPass" PasswordChar="*"/>
+        </WrapPanel>
+        <Button Grid.Row="1" Content="确 定" Margin="50,15" FontSize="20" Click="Button_Click"/>
+    </Grid>
+</Window>

@@ -67,7 +67,7 @@ namespace DreamSoft
             {
                 string posCode = fTestD.NowUnit.ToString() + fTestD.NowLayer.ToString().PadLeft(2, '0') + fTestD.NowCol.ToString().PadLeft(2, '0');
                 PLC_Tcp_AP.DCTMoveDownSingle(posCode);
-                Thread.Sleep(2000);//间隔计数时间
+                Thread.Sleep(fTestD.Delay);//间隔时间
                 int m = PLC_Tcp_AP.ReadRecordSingle(posCode);
                 if (dicRecord.Keys.Contains(posCode))
                     dicRecord[posCode] = m;
@@ -105,14 +105,18 @@ namespace DreamSoft
             svNum.ScrollToEnd();
         }
 
+        private CSHelper.Msg csMsg = new CSHelper.Msg();
         private void btn_start_click(object sender, RoutedEventArgs e)
         {
-            dicRecord.Clear();
-            fTestD.NowUnit = fTestD.BeginUnit;
-            fTestD.NowLayer = fTestD.BeginLayer;
-            fTestD.NowCol = fTestD.BeginCol;
-            tmr_dct.Interval = TimeSpan.FromMilliseconds(fTestD.Delay);
-            tmr_dct.Start();
+            if (csMsg.ShowQuestion("自动测试仅限调试时使用，此操作会有出药动作，可能会导致库存错乱。\r\n确定要开始自动测试吗？", false))
+            {
+                dicRecord.Clear();
+                fTestD.NowUnit = fTestD.BeginUnit;
+                fTestD.NowLayer = fTestD.BeginLayer;
+                fTestD.NowCol = fTestD.BeginCol;
+                tmr_dct.Interval = TimeSpan.FromMilliseconds(fTestD.Delay);
+                tmr_dct.Start();
+            }
         }
 
         private void btn_stop_click(object sender, RoutedEventArgs e)

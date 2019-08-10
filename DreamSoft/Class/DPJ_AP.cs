@@ -13,8 +13,8 @@ namespace DreamSoft
         static CSHelper.Msg csMsg = new CSHelper.Msg();
         static CSHelper.LOG csLog = new CSHelper.LOG();
 
-        public delegate void ShowMsg(string msg);
-        public static ShowMsg ThrowMsg;
+        //public delegate void ShowMsg(string msg);
+        //public static ShowMsg ThrowMsg;
 
         public static SerialPort spDPJ;
         //初始化

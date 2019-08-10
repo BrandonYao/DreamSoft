@@ -31,12 +31,13 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Images\hospital.ico</ApplicationIcon>
@@ -103,6 +104,9 @@
     </Compile>
     <Compile Include="UserControl\ZsmTreeView.xaml.cs">
       <DependentUpon>ZsmTreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WinPass.xaml.cs">
+      <DependentUpon>WinPass.xaml</DependentUpon>
     </Compile>
     <Compile Include="中药机软件\WinMain_CP.xaml.cs">
       <DependentUpon>WinMain_CP.xaml</DependentUpon>
@@ -234,6 +238,10 @@
     <Page Include="MSG\WinMsg.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WinPass.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="中药机软件\WinMain_CP.xaml">
       <Generator>MSBuild:Compile</Generator>
