@@ -93,12 +93,19 @@ namespace DreamSoft
         private static void GetCode(int unit, int master, int dct, out DCT_Single dsg, out int code)
         {
             dsg = null; code = 0;
-            var array = lstCard.Where(p => p.UnitCode == unit && p.BeginLayer <= master && master <= p.EndLayer);
-            if (array.Count() > 0)
+            try
             {
-                ControlCard cc = array.FirstOrDefault();
-                dsg = cc.Card;
-                code = (master - cc.BeginLayer) * ColumnCount + dct;
+                var array = lstCard.Where(p => p.UnitCode == unit && p.BeginLayer <= master && master <= p.EndLayer);
+                if (array.Count() > 0)
+                {
+                    ControlCard cc = array.FirstOrDefault();
+                    dsg = cc.Card;
+                    code = (master - cc.BeginLayer) * ColumnCount + dct;
+                }
+            }
+            catch (Exception ex)
+            {
+                fLog.WriteException("GetCode", ex);
             }
         }
     }

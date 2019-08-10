@@ -36,6 +36,7 @@ namespace DreamSoft
             public static string Config;
 
             public static string Server;
+            public static string Local;
             public static string UserID;
             public static string Password;
             public static string Database;
@@ -337,11 +338,13 @@ namespace DreamSoft
             Soft.Config = csIni.ReadIni("SYS", "Config", "", file);
 
             Soft.Server = csIni.ReadIni("SYS", "Server", "", file);
+            Soft.Local = csIni.ReadIni("SYS", "Local", "", file);
             Soft.UserID = csIni.ReadIni("SYS", "UserID", "", file);
             Soft.Password = csIni.ReadIni("SYS", "Password", "", file);
             Soft.Database = csIni.ReadIni("SYS", "Database", "", file);
-
-            Soft.ConnString = "Server=" + Soft.Server + ";User ID=" + Soft.UserID + ";Password=" + Soft.Password + ";Database=" + Soft.Database + ";connect timeout=1";
+            if (Soft.Local != "1")
+                Soft.ConnString = "Server=" + Soft.Server + ";User ID=" + Soft.UserID + ";Password=" + Soft.Password + ";Database=" + Soft.Database + ";connect timeout=1";
+            else Soft.ConnString = "Server=" + Soft.Server + ";Database=" + Soft.Database + ";Trusted_Connection=Yes";
             Soft.ConnString_His = csIni.ReadIni("HIS", "ConnString", "", file);
 
             Soft.SoftType = csIni.ReadIni("SOFT", "SoftType", "0", file);
@@ -380,8 +383,8 @@ namespace DreamSoft
                 DicsMac_A = ReadConfig(Soft.MacCode);
                 Mac_A.IP_PLC = DicsMac_A["IP_PLC"];
                 Mac_A.Port_PLC = DicsMac_A["Port_PLC"];
-                Mac_A.IP_DCT = DicsMac_A.Keys.Contains("IP_DCT") ? DicsMac_A["IP_DCT"] : "192.168.3.200";
-                Mac_A.Port_DCT = DicsMac_A.Keys.Contains("Port_DCT") ? int.Parse(DicsMac_A["Port_DCT"]) : 2000;
+                //Mac_A.IP_DCT = DicsMac_A.Keys.Contains("IP_DCT") ? DicsMac_A["IP_DCT"] : "192.168.3.200";
+                //Mac_A.Port_DCT = DicsMac_A.Keys.Contains("Port_DCT") ? int.Parse(DicsMac_A["Port_DCT"]) : 2000;
                 Mac_A.Port_DPJ = DicsMac_A["Port_DPJ"];
                 Mac_A.Port_Scanner = DicsMac_A["Port_Scanner"];
                 Mac_A.Port_Laser_Left = DicsMac_A["Port_Laser_Left"];
