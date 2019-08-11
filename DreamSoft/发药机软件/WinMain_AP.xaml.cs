@@ -155,6 +155,7 @@ namespace DreamSoft
             PLC_Tcp_AP.ThrowMsg += new PLC_Tcp_AP.ShowMsg(MsgChanged);
             PLC_Com_AP.ThrowMsg += new PLC_Com_AP.ShowMsg(MsgChanged);
             DCT_AP.ThrowMsg += new DCT_AP.ShowMsg(MsgChanged);
+            DCT_Single.ThrowMsg += new DCT_Single.ShowMsg(MsgChanged);
             Scanner.ThrowMsg += new Scanner.ShowMsg(MsgChanged);
             Laser.ThrowMsg += new Laser.ShowMsg(MsgChanged);
             CSHelper.SQL.ThrowMsg += new CSHelper.SQL.ShowMsg(MsgChanged);
@@ -329,11 +330,15 @@ namespace DreamSoft
         }
         private void debug_Click(object sender, RoutedEventArgs e)
         {
+            bool b = (bool)new WinPass().ShowDialog();
+            if (!b) return;
             UserControl uc;
             if (Config.Soft.Function == "I")
                 uc = new UCDebug_Add();
             else
+            {
                 uc = new UCDebug_Out();
+            }
             ShowUC(uc);
         }
 
