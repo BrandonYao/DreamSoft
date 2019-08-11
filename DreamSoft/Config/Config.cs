@@ -357,6 +357,7 @@ namespace DreamSoft
         public static void InitialConfig_Server()
         {
             DicsSys = ReadConfig("Sys");
+            if (DicsSys.Count == 0) return;
             Sys.WidthSpan = int.Parse(DicsSys["WidthSpan"]);
             Sys.HeightSpan = int.Parse(DicsSys["HeightSpan"]);
             Sys.EnableTime = int.Parse(DicsSys["EnableTime"]);
@@ -366,6 +367,7 @@ namespace DreamSoft
         public static void InitialConfig_LED()
         {
             DicsLed = ReadConfig("Led");
+            if (DicsLed.Count == 0) return;
             Led.Margin_Left = int.Parse(DicsLed["Margin_Left"]);
             Led.Margin_Top = int.Parse(DicsLed["Margin_Top"]);
             Led.Width = int.Parse(DicsLed["Width"]);
@@ -381,6 +383,7 @@ namespace DreamSoft
             try
             {
                 DicsMac_A = ReadConfig(Soft.MacCode);
+                if (DicsMac_A.Count == 0) return;
                 Mac_A.IP_PLC = DicsMac_A["IP_PLC"];
                 Mac_A.Port_PLC = DicsMac_A["Port_PLC"];
                 //Mac_A.IP_DCT = DicsMac_A.Keys.Contains("IP_DCT") ? DicsMac_A["IP_DCT"] : "192.168.3.200";
@@ -498,6 +501,7 @@ namespace DreamSoft
         public static void InitialConfig_Mac_S()
         {
             DicsMac_S = ReadConfig(Soft.MacCode);
+            if (DicsMac_S.Count == 0) return;
             Mac_S.Port_PLC = DicsMac_S["Port_PLC"];
 
             Mac_S.Count_Unit = int.Parse(DicsMac_S["Count_Unit"]);
@@ -521,6 +525,7 @@ namespace DreamSoft
         public static void InitialConfig_Mac_C()
         {
             DicsMac_C = ReadConfig(Soft.MacCode);
+            if (DicsMac_C.Count == 0) return;
             Mac_C.IP_PLC = DicsMac_C["IP_PLC"];
             Mac_C.Port_PLC = DicsMac_C["Port_PLC"];
             Mac_C.Port_DPJ = DicsMac_C["Port_DPJ"];

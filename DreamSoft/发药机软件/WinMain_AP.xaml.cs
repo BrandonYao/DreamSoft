@@ -134,6 +134,7 @@ namespace DreamSoft
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            tbkVersion.Text = string.Format("Version: {0}", Application.ResourceAssembly.GetName().Version);
             timer_Monitor.Interval = TimeSpan.FromSeconds(3);
             timer_Monitor.Tick += new EventHandler(timer_Monitor_Tick);
             timer_Monitor.Start();

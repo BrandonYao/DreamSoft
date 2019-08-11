@@ -107,6 +107,7 @@ namespace DreamSoft
                 string unit = cbUnit.SelectedValue.ToString().Trim();
 
                 Dictionary<string, string> dics = Config.ReadConfig(mac);
+                if (dics.Count == 0) return;
                 int count_Unit = int.Parse(dics["Count_Unit"]);
                 int count_Lay = int.Parse(dics["Count_Lay"]);
                 int count_Col = int.Parse(dics["Count_Col"]);
@@ -216,6 +217,7 @@ namespace DreamSoft
             {
                 string mac = cbMac.SelectedValue.ToString().Trim();
                 Dictionary<string, string> dics = Config.ReadConfig(mac);
+                if (dics.Count == 0) return;
                 int count_Unit = int.Parse(dics["Count_Unit"]);
                 for (int i = 1; i <= count_Unit; i++)
                 {

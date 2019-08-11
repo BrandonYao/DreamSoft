@@ -81,6 +81,8 @@
                 </RadialGradientBrush>
             </Grid.Background>
 
+            <TextBlock Name="tbkVersion" Margin="10"/>
+
             <Canvas Width="900" Height="500">
 
                 <DockPanel Canvas.Left="350" Canvas.Top="200" Width="200" Height="100">

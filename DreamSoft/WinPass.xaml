@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
         <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock Text="密码：" VerticalAlignment="Center"/>
-            <PasswordBox MinWidth="150" Margin="10" HorizontalContentAlignment="Center" FontSize="22" Name="tbxPass" PasswordChar="*"/>
+            <PasswordBox MinWidth="150" Margin="10" HorizontalContentAlignment="Center" FontSize="22" Name="tbxPass" PasswordChar="*" KeyDown="tbxPass_KeyDown"/>
         </WrapPanel>
         <Button Grid.Row="1" Content="确 定" Margin="50,15" FontSize="20" Click="Button_Click"/>
     </Grid>

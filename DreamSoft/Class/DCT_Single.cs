@@ -37,7 +37,7 @@ namespace DreamSoft
         {
             fIPAddrSick = IPAddress.Parse(strIP);
             PORT = port;
-            fLog = new HslCommunication.LogNet.LogNetDateTime(Environment.CurrentDirectory + @"/Log/DCT" + flag, 
+            fLog = new HslCommunication.LogNet.LogNetDateTime(Environment.CurrentDirectory + @"/Log/DCT" + flag,
                 HslCommunication.LogNet.GenerateMode.ByEveryDay);
         }
         private bool IpIsOK(IPAddress ipa)
@@ -187,13 +187,12 @@ namespace DreamSoft
                             byte[] bts_recv = new byte[num];
                             skt.Receive(bts_recv);
                             RecvDatas.AddRange(bts_recv);
+                            string recvStr = GetStrFromBytes(bts_recv.ToArray());
+                            fLog.WriteDebug("接收数据\t", recvStr);
                             bts_recv = null;
                             //处理接收的数据
                             if (RecvDatas.Count > 8)
                             {
-                                string recvStr = GetStrFromBytes(bts_recv.ToArray());
-                                fLog.WriteDebug("接收数据\t", recvStr);
-                                SendError("接收数据：" + recvStr);
                                 int endIndex = 0;
                                 for (int i = 0; i < RecvDatas.Count; i++)
                                 {
@@ -203,25 +202,26 @@ namespace DreamSoft
                                         RecvDatas.CopyTo(i, bts, 0, 9);
                                         string oneStr = GetStrFromBytes(bts.ToArray());
                                         fLog.WriteDebug("完整报文\t", oneStr);
-                                        SendError("完整报文：" + oneStr);
                                         RecvDatas.CopyTo(i + 7, crc, 0, 2);
                                         fLog.WriteDebug("校验位\t", GetStrFromBytes(crc.ToArray()));
                                         ModBusCRC16(ref bts, 7);
                                         if (bts[7] == crc[0] && bts[8] == crc[1])//校验成功，数据完整
                                         {
-                                            if (RecvDatas[i + 3] == 0x01)
+                                            //if (RecvDatas[i + 3] == 0x01)
                                             {
                                                 int code = RecvDatas[i + 2] * 256 + RecvDatas[i + 1];
                                                 if (Dic_Pos_Num.Keys.Contains(code))
                                                 {
                                                     if ((DateTime.Now - Dic_Pos_Num[code].NumDate).TotalMilliseconds < 2000)
+                                                    {
                                                         Dic_Pos_Num[code].Num += 1;
+                                                        fLog.WriteDebug("计数成功\t" + code);
+                                                    }
+                                                    else fLog.WriteDebug("计数超时\t" + code);
                                                 }
-                                                else Dic_Pos_Num.Add(code, new PosNum() { Num = 1, NumDate = DateTime.Now });
-                                                fLog.WriteDebug("计数成功\t" + code);
-                                                SendError("计数成功\t" + code);
                                             }
-                                            endIndex = i + 8;
+                                            i += 8;//跳过当前报文
+                                            endIndex = i;
                                         }
                                         else
                                         {
@@ -234,12 +234,16 @@ namespace DreamSoft
                             }
                         }
                     }
-                    catch (Exception ex)
+                    catch (SocketException ex)
                     {
                         //通讯异常
                         SendError("控制板通讯异常");
-                        if (ex.GetType().Equals(typeof(SocketException)))
-                            Initial();
+                        fLog.WriteException("接收数据", ex);
+                        Initial();
+                    }
+                    catch (Exception ex)
+                    {
+                        fLog.WriteException("接收数据", ex);
                     }
                 }
                 Thread.Sleep(100);

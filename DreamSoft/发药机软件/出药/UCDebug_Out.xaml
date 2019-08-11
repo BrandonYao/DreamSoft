@@ -254,12 +254,13 @@
                         </Grid.ColumnDefinitions>
                         <Grid >
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="2*" />
+                                <RowDefinition Height="1.6*" />
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
+                                <RowDefinition Height="1.5*" />
+                                <RowDefinition Height="0.5*" />
                             </Grid.RowDefinitions>
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -281,7 +282,7 @@
                                 <ComboBox Grid.Column="1" Grid.Row="1" Margin="10" SelectedIndex="0" Style="{StaticResource cbStyle}" Name="cbLayer"/>
                             </Grid>
 
-                            <GroupBox Grid.Row="2" Grid.RowSpan="3" Header="当前层循环测试" FontSize="18" Name="gbTest">
+                            <GroupBox Grid.Row="2" Grid.RowSpan="3" Header="当前层循环测试" FontSize="18" Name="gbTest" Visibility="Hidden">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
@@ -684,7 +685,7 @@
                                     <Button Grid.Row="1" Grid.Column="1" Grid.RowSpan="1" Content="清零" Tag="23" Margin="5" FontSize="18" Click="btPos_ClearRecord_Click" />
                                 </Grid>
                             </Border>
-                            <WrapPanel Grid.Row="4" Grid.ColumnSpan="6">
+                            <WrapPanel Grid.Row="4" Grid.ColumnSpan="6" Visibility="Hidden">
                                 <TextBlock Text="计数情况：" VerticalAlignment="Center" Margin="10,0"/>
                                 <TextBlock Name="tbRecord" Text="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3"/>
                             </WrapPanel>

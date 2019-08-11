@@ -26,12 +26,22 @@ namespace DreamSoft
         private CSHelper.Msg csMsg = new CSHelper.Msg();
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            Pass();
+        }
+
+        private void tbxPass_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                Pass();
+        }
+        private void Pass()
+        {
             string pass = DateTime.Now.ToString("yyyyMMddHH");
             if (tbxPass.Password.Trim() == pass)
                 this.DialogResult = true;
             else
             {
-                csMsg.ShowInfo("密码错误！\r\n想一想，现在几点了？", false);
+                csMsg.ShowWarning("密码错误！\r\n想一想，现在几点了？", false);
                 this.DialogResult = false;
             }
         }
