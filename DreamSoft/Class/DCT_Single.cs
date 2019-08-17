@@ -223,11 +223,11 @@ namespace DreamSoft
                                             i += 8;//跳过当前报文
                                             endIndex = i;
                                         }
-                                        else
-                                        {
-                                            fLog.WriteDebug("校验失败");
-                                            SendError("校验失败");
-                                        }
+                                        //else
+                                        //{
+                                        //    fLog.WriteDebug("校验失败");
+                                        //    SendError("校验失败");
+                                        //}
                                     }
                                 }
                                 RecvDatas.RemoveRange(0, endIndex + 1);
