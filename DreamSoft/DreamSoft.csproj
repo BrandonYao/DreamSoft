@@ -78,6 +78,7 @@
     </ApplicationDefinition>
     <Compile Include="Class\ColorConverter.cs" />
     <Compile Include="Class\DCT_AP.cs" />
+    <Compile Include="Class\Plate_New.cs" />
     <Compile Include="Class\DCT_Single.cs" />
     <Compile Include="Class\DPJ_AP.cs" />
     <Compile Include="Class\DPJ_CP.cs" />

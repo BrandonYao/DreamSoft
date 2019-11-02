@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace DreamSoft
 {
-    class DCT_Single
+    class Plate_New
     {
         private TcpClient tcp;
         private Socket skt;
@@ -18,6 +18,8 @@ namespace DreamSoft
         private int PORT = 2111;
         private readonly object myLock = new object();
         public bool IsConnected { get { return tcp == null ? false : tcp.Connected; } }
+        public int NowPos = 0, //当前位置
+            Record = 0;//加药计数
 
         #region error
         public delegate void ShowMsg(string msg);
@@ -27,17 +29,17 @@ namespace DreamSoft
         {
             lock (myErrorLock)
             {
-                ThrowMsg?.Invoke(string.Format("弹跳-", error));
+                ThrowMsg?.Invoke(string.Format("加药仓-", error));
             }
         }
         #endregion
 
         private HslCommunication.LogNet.LogNetDateTime fLog;
-        public DCT_Single(string strIP, int port, string flag)
+        public Plate_New(string strIP, int port, string flag)
         {
             fIPAddrSick = IPAddress.Parse(strIP);
             PORT = port;
-            fLog = new HslCommunication.LogNet.LogNetDateTime(Environment.CurrentDirectory + @"/Log/DCT" + flag,
+            fLog = new HslCommunication.LogNet.LogNetDateTime(Environment.CurrentDirectory + @"/Log/Plate" + flag,
                 HslCommunication.LogNet.GenerateMode.ByEveryDay);
         }
         private bool IpIsOK(IPAddress ipa)
@@ -106,6 +108,8 @@ namespace DreamSoft
             }
             return false;
         }
+
+
         private void ModBusCRC16(ref byte[] cmd, int len)
         {
             ushort i, j, tmp, CRC16;
@@ -250,34 +254,16 @@ namespace DreamSoft
             }
         }
 
-        public bool DCTMoveDownSingle(int code, int time)
+        public bool InitialPos()
+        { return true; }
+        public bool MoveUpByHeight(int height)
         {
-            bool result = false;
-            byte[] bts = new byte[9];
-            bts[0] = 0xA7;
-            bts[1] = (byte)(code % 256);
-            bts[2] = (byte)(code / 256);
-            bts[3] = 0x01;
-            bts[4] = (byte)(time / 10);
-            bts[5] = 0x01;
-            bts[6] = 0xEF;
-            fLog.WriteDebug("指令\t", GetStrFromBytes(bts));
-            result = ExecuteCmd(bts, new StackTrace().GetFrame(0).GetMethod().ToString());
-            if (Dic_Pos_Num.Keys.Contains(code))
-            {
-                Dic_Pos_Num[code].NumDate = DateTime.Now;
-            }
-            else Dic_Pos_Num.Add(code, new PosNum() { Num = 0, NumDate = DateTime.Now });
-            return result;
-        }
-        public bool ReadRecordSingle(int code, out int record)
-        {
-            record = Dic_Pos_Num.Keys.Contains(code) ? Dic_Pos_Num[code].Num : 0;
+            NowPos += height;
             return true;
         }
-        public bool ClearRecordSingle(int code)
+        public bool GetRecord(out int num)
         {
-            if (Dic_Pos_Num.Keys.Contains(code)) Dic_Pos_Num.Remove(code);//直接清除得了
+            num = Record;
             return true;
         }
 
