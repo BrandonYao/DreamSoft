@@ -98,11 +98,12 @@ namespace DreamSoft
                 }
                 if (Config.Mac_A.DPJ == "Y")
                 {
-                    //if (ports.Contains(Config.Mac_A.IP_DCT))
                     DCT_AP.DCT_AP_Initial(Config.Soft.ConnString, Config.Mac_A.Count_Col);
+                    //if (ports.Contains(Config.Mac_A.IP_DCT))
                     //else
                     //    csMsg.ShowWarning("单片机串口不存在", true);
                 }
+                Plate_New.Initial();
             }
             grid_Key.Visibility = Visibility.Collapsed;
         }
@@ -179,7 +180,9 @@ namespace DreamSoft
                 {
                     PLC_Tcp_AP.ExtramanOriginReset();
                     Thread.Sleep(1000);
-                    PLC_Tcp_AP.PlateOriginReset();
+                    //PLC_Tcp_AP.PlateOriginReset();
+                    Plate_New.PlateOriginReset(PLC_Tcp_AP.PlateType.Left);
+                    Plate_New.PlateOriginReset(PLC_Tcp_AP.PlateType.Right);
                 }
                 else
                 {
@@ -223,37 +226,41 @@ namespace DreamSoft
                         grid_Z.Visibility = Visibility.Visible;
                     }
                     //左臂
-                    if (PLC_Tcp_AP.PlateStateIsOK(PLC_Tcp_AP.PlateType.Left))// && PLC.PlateOriginResetState(PLC.PlateType.Left))
+                    //if (PLC_Tcp_AP.PlateStateIsOK(PLC_Tcp_AP.PlateType.Left))
+                    //{
+                    //    grid_Left.Visibility = Visibility.Collapsed;
+                    //}
+                    //else
+                    //{
+                    //    error = true;
+                    //    tbLeft.Text = PLC_Tcp_AP.ReadPlateErrorCode(PLC_Tcp_AP.PlateType.Left);
+                    //    grid_Left.Visibility = Visibility.Visible;
+                    //}
+                    //右臂
+                    //if (PLC_Tcp_AP.PlateStateIsOK(PLC_Tcp_AP.PlateType.Right))
+                    if (Plate_New.PlateStateIsOK())
                     {
                         grid_Left.Visibility = Visibility.Collapsed;
-                    }
-                    else
-                    {
-                        error = true;
-                        tbLeft.Text = PLC_Tcp_AP.ReadPlateErrorCode(PLC_Tcp_AP.PlateType.Left);
-                        grid_Left.Visibility = Visibility.Visible;
-                    }
-                    //右臂
-                    if (PLC_Tcp_AP.PlateStateIsOK(PLC_Tcp_AP.PlateType.Right))// && PLC.PlateOriginResetState(PLC.PlateType.Right))
-                    {
                         grid_Right.Visibility = Visibility.Collapsed;
                     }
                     else
                     {
                         error = true;
-                        tbRight.Text = PLC_Tcp_AP.ReadPlateErrorCode(PLC_Tcp_AP.PlateType.Right);
+                        tbLeft.Text = "P1";// PLC_Tcp_AP.ReadPlateErrorCode(PLC_Tcp_AP.PlateType.Left);
+                        grid_Left.Visibility = Visibility.Visible;
+                        tbRight.Text = "P2";//PLC_Tcp_AP.ReadPlateErrorCode(PLC_Tcp_AP.PlateType.Right);
                         grid_Right.Visibility = Visibility.Visible;
                     }
                     //加药障碍
-                    if (PLC_Tcp_AP.PlateErrorZHA())
-                    {
-                        grid_ZHA.Visibility = Visibility.Collapsed;
-                    }
-                    else
-                    {
-                        error = true;
-                        grid_ZHA.Visibility = Visibility.Visible;
-                    }
+                    //if (PLC_Tcp_AP.PlateErrorZHA())
+                    //{
+                    //    grid_ZHA.Visibility = Visibility.Collapsed;
+                    //}
+                    //else
+                    //{
+                    //    error = true;
+                    //    grid_ZHA.Visibility = Visibility.Visible;
+                    //}
                 }
             }
             else
@@ -411,11 +418,11 @@ namespace DreamSoft
         }
         private void btL_Click(object sender, RoutedEventArgs e)
         {
-            PLC_Tcp_AP.PlateErrorReset(PLC_Tcp_AP.PlateType.Left);
+            //PLC_Tcp_AP.PlateErrorReset(PLC_Tcp_AP.PlateType.Left);
         }
         private void btR_Click(object sender, RoutedEventArgs e)
         {
-            PLC_Tcp_AP.PlateErrorReset(PLC_Tcp_AP.PlateType.Right);
+            //PLC_Tcp_AP.PlateErrorReset(PLC_Tcp_AP.PlateType.Right);
         }
         private void btLift_Click(object sender, RoutedEventArgs e)
         {

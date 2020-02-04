@@ -44,7 +44,7 @@ namespace DreamSoft
         }
         public class Drug
         {
-            public string DrugOnlyCode{get;set;}
+            public string DrugOnlyCode { get; set; }
             public string DrugName { get; set; }
             public string DrugSpec { get; set; }
             public string DrugFactory { get; set; }
@@ -74,12 +74,12 @@ namespace DreamSoft
                 for (int r = 0; r < dtDrug.Rows.Count; r++)
                 {
                     ds[r] = new Drug
-                     {
-                         DrugOnlyCode = dtDrug.Rows[r]["drugonlycode"].ToString(),
-                         DrugName = dtDrug.Rows[r]["drugname"].ToString(),
-                         DrugSpec = dtDrug.Rows[r]["drugspec"].ToString(),
-                         DrugFactory = dtDrug.Rows[r]["drugfactory"].ToString()
-                     };
+                    {
+                        DrugOnlyCode = dtDrug.Rows[r]["drugonlycode"].ToString(),
+                        DrugName = dtDrug.Rows[r]["drugname"].ToString(),
+                        DrugSpec = dtDrug.Rows[r]["drugspec"].ToString(),
+                        DrugFactory = dtDrug.Rows[r]["drugfactory"].ToString()
+                    };
                 }
             }
             lvDrug.ItemsSource = ds;
@@ -138,7 +138,7 @@ namespace DreamSoft
             public string PDNum { get; set; }
 
             private string backColor;
-            public string BackColor 
+            public string BackColor
             {
                 get { return backColor; }
                 set
@@ -172,7 +172,7 @@ namespace DreamSoft
             if (dtPos != null && dtPos.Rows.Count > 0)
             {
                 ps = new Pos[dtPos.Rows.Count];
-                for (int r = 0; r < dtPos.Rows.Count; r++ )
+                for (int r = 0; r < dtPos.Rows.Count; r++)
                 {
                     ps[r] = new Pos
                     {
@@ -260,7 +260,7 @@ namespace DreamSoft
                 //查询右臂可加储位缺药量(单元号>1,列号大于右臂下极限）
                 string sql = @"select sum(isnull(drugnummax,0)-isnull(drugnum,0)) as shortnum from drug_pos where drugonlycode='{0}' and maccode='{1}'
                  and (substring(poscode,1,1)>1 or substring(poscode,4,2)>={2}) group by DrugOnlyCode";
-                sql = string.Format(sql, code, Config.Soft.MacCode,Config.Mac_A.MinCol);
+                sql = string.Format(sql, code, Config.Soft.MacCode, Config.Mac_A.MinCol);
                 string numRs;
                 csSql.ExecuteScalar(sql, Config.Soft.ConnString, out numRs);
                 int numRi = 0;
@@ -290,7 +290,7 @@ namespace DreamSoft
             public string DrugOnlyCode;
             public int Num;
             public PLC_Tcp_AP.PlateType PlateType;
-            public string Batch; 
+            public string Batch;
             public string ValidDate;
             public bool QZ;
         };
@@ -327,9 +327,11 @@ namespace DreamSoft
                     if (!string.IsNullOrEmpty(s))
                         drugThickness = float.Parse(s);
                     int pulse = Convert.ToInt32(num * drugThickness * Config.Mac_A.OneMMPulse_Plate);
-                    PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Left, float.Parse(Config.Mac_A.Pulse_Plate_Max_Left) - pulse);
+                    //PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Left, float.Parse(Config.Mac_A.Pulse_Plate_Max_Left) - pulse);
+                    float upPulse = (Config.Mac_A.PlateHeight - num * drugThickness) * Config.Mac_A.OneMMPulse_Plate;
+                    Plate_New.PlateUpPulse(PLC_Tcp_AP.PlateType.Left, (int)upPulse);
                 }
-                else if(type == PLC_Tcp_AP.PlateType.Right)
+                else if (type == PLC_Tcp_AP.PlateType.Right)
                 {
                     plate_Right.DrugOnlyCode = code;
                     plate_Right.Num = num;
@@ -354,7 +356,9 @@ namespace DreamSoft
                     if (!string.IsNullOrEmpty(s))
                         drugThickness = float.Parse(s);
                     int pulse = Convert.ToInt32(num * drugThickness * Config.Mac_A.OneMMPulse_Plate);
-                    PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Right, float.Parse(Config.Mac_A.Pulse_Plate_Max_Right) - pulse);
+                    //PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Right, float.Parse(Config.Mac_A.Pulse_Plate_Max_Right) - pulse);
+                    float upPulse = (Config.Mac_A.PlateHeight - num * drugThickness) * Config.Mac_A.OneMMPulse_Plate;
+                    Plate_New.PlateUpPulse(PLC_Tcp_AP.PlateType.Right, (int)upPulse);
                 }
             }
             else
@@ -370,7 +374,8 @@ namespace DreamSoft
                     btClearL.IsEnabled = false;
                     gd_L.Background = new SolidColorBrush(Colors.LightGreen);
 
-                    PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Left, float.Parse(Config.Mac_A.Pulse_Plate_Min_Left));
+                    //PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Left, float.Parse(Config.Mac_A.Pulse_Plate_Min_Left));
+                    Plate_New.PlateOriginReset(PLC_Tcp_AP.PlateType.Left);
                 }
                 else if (type == PLC_Tcp_AP.PlateType.Right)
                 {
@@ -383,7 +388,8 @@ namespace DreamSoft
                     btClearR.IsEnabled = false;
                     gd_R.Background = new SolidColorBrush(Colors.LightGreen);
 
-                    PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Right, float.Parse(Config.Mac_A.Pulse_Plate_Min_Right));
+                    //PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Right, float.Parse(Config.Mac_A.Pulse_Plate_Min_Right));
+                    Plate_New.PlateOriginReset(PLC_Tcp_AP.PlateType.Right);
                 }
             }
         }
@@ -492,8 +498,10 @@ namespace DreamSoft
             //运行到接药口
             PLC_Tcp_AP.ExtramanAutoMoveToPulse(float.Parse(Config.Mac_A.Pulse_Meet_X), float.Parse(Config.Mac_A.Pulse_Meet_Z));
             //推药板复位
-            PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Left, float.Parse(Config.Mac_A.Pulse_Plate_Min_Left));
-            PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Right, float.Parse(Config.Mac_A.Pulse_Plate_Min_Right));
+            //PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Left, float.Parse(Config.Mac_A.Pulse_Plate_Min_Left));
+            //PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Right, float.Parse(Config.Mac_A.Pulse_Plate_Min_Right));
+            Plate_New.PlateOriginReset(PLC_Tcp_AP.PlateType.Left);
+            Plate_New.PlateOriginReset(PLC_Tcp_AP.PlateType.Right);
         }
 
         private void btPD_Click(object sender, RoutedEventArgs e)
@@ -522,6 +530,7 @@ namespace DreamSoft
             if (toUp)
             {
                 IsBusy = true;
+                /*
                 foreach (Plate p in Plates)
                 {
                     if (p.Num > 0)
@@ -552,7 +561,6 @@ namespace DreamSoft
                         }
                     }
                 }
-
                 DateTime timeBegin = DateTime.Now;
                 //机械手加药
                 while (!upLeftIsOK || !upRightIsOK)
@@ -563,6 +571,7 @@ namespace DreamSoft
                     }
                     Thread.Sleep(100);
                 }
+                */
                 if (upLeftIsOK && upRightIsOK)
                 {
                     SetNumL(plate_Left.Num);
@@ -570,10 +579,10 @@ namespace DreamSoft
 
                     PLC_Tcp_AP.ChangeAdd(1);
                     //先设定当前位置
-                    float pulse = PLC_Tcp_AP.ReadPlatePulse(PLC_Tcp_AP.PlateType.Left);
-                    PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Left, pulse);
-                    pulse = PLC_Tcp_AP.ReadPlatePulse(PLC_Tcp_AP.PlateType.Right);
-                    PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Right, pulse);
+                    //float pulse = PLC_Tcp_AP.ReadPlatePulse(PLC_Tcp_AP.PlateType.Left);
+                    //PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Left, pulse);
+                    //pulse = PLC_Tcp_AP.ReadPlatePulse(PLC_Tcp_AP.PlateType.Right);
+                    //PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Right, pulse);
 
                     bool toAdd = false;
                     foreach (Plate p in Plates)
@@ -680,7 +689,7 @@ namespace DreamSoft
             {
                 //查询缺药储位
                 string sql = "select poscode from drug_pos where drugnummax>drugnum and (substring(poscode,1,1)<" + Config.Mac_A.Count_Unit + " or substring(poscode,4,2)<={2}) and maccode='{0}' and drugonlycode='{1}' order by (drugnummax-drugnum) desc";
-                sql = string.Format(sql, Config.Soft.MacCode, plate_Left.DrugOnlyCode,Config.Mac_A.MaxCol);
+                sql = string.Format(sql, Config.Soft.MacCode, plate_Left.DrugOnlyCode, Config.Mac_A.MaxCol);
 
                 DataTable dt = new DataTable();
                 csSql.ExecuteSelect(sql, Config.Soft.ConnString, out dt);
@@ -744,7 +753,8 @@ namespace DreamSoft
                 {
                     //推药板复位
                     //PLC_Tcp.ChangeAdd(1);
-                    PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Left, float.Parse(Config.Mac_A.Pulse_Plate_Min_Left));
+                    //PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Left, float.Parse(Config.Mac_A.Pulse_Plate_Min_Left));
+                    Plate_New.PlateOriginReset(PLC_Tcp_AP.PlateType.Left);
                 }
                 plate_Left.DrugOnlyCode = "";
                 plate_Left.Num = 0;
@@ -753,7 +763,7 @@ namespace DreamSoft
             {
                 //查询缺药储位
                 string sql = "select poscode from drug_pos where drugnummax>drugnum and (substring(poscode,1,1)>1 or substring(poscode,4,2)>={2}) and maccode='{0}' and drugonlycode='{1}' order by (drugnummax-drugnum) desc";
-                sql = string.Format(sql, Config.Soft.MacCode, plate_Right.DrugOnlyCode,Config.Mac_A.MinCol);
+                sql = string.Format(sql, Config.Soft.MacCode, plate_Right.DrugOnlyCode, Config.Mac_A.MinCol);
 
                 DataTable dt = new DataTable();
                 csSql.ExecuteSelect(sql, Config.Soft.ConnString, out dt);
@@ -786,7 +796,7 @@ namespace DreamSoft
                         sql = string.Format(sql, Config.Soft.MacCode, pos);
                         int shortNum = 0; string v;
                         csSql.ExecuteScalar(sql, Config.Soft.ConnString, out v);
-                        if(!string.IsNullOrEmpty(v))
+                        if (!string.IsNullOrEmpty(v))
                             shortNum = int.Parse(v);
                         int addNum = 0;
                         if (shortNum > 0)
@@ -813,12 +823,13 @@ namespace DreamSoft
                     }
                     else
                         break;
-                } 
+                }
                 if (!stop)
                 {
                     //推药板复位
                     //PLC_Tcp.ChangeAdd(1);
-                    PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Right, float.Parse(Config.Mac_A.Pulse_Plate_Min_Right));
+                    //PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Right, float.Parse(Config.Mac_A.Pulse_Plate_Min_Right));
+                    Plate_New.PlateOriginReset(PLC_Tcp_AP.PlateType.Right);
                 }
                 plate_Right.DrugOnlyCode = "";
                 plate_Right.Num = 0;
@@ -835,16 +846,16 @@ namespace DreamSoft
 
         public void SetNumL(int n)
         {
-            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate() { tbNumL.Text = n.ToString(); }); 
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate () { tbNumL.Text = n.ToString(); });
         }
         public void SetNumR(int n)
         {
-            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate() { tbNumR.Text = n.ToString(); });
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate () { tbNumR.Text = n.ToString(); });
         }
 
         public void SetErrorVisibility(Visibility v)
         {
-            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate() { tbError.Visibility = v; });
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate () { tbError.Visibility = v; });
         }
 
         List<List<string>> paths = new List<List<string>>();
@@ -972,7 +983,8 @@ namespace DreamSoft
 
             float nowPulse = PLC_Tcp_AP.ReadPlatePulse(type);
             //计数清零
-            PLC_Tcp_AP.ResetPlateRecord(type);
+            //PLC_Tcp_AP.ResetPlateRecord(type);
+            Plate_New.ResetPlateRecord(type);
 
             int oldRecord = 0, newRecord = 0;
             stopAdd = false;
@@ -990,7 +1002,7 @@ namespace DreamSoft
             //补偿脉冲值
             //int bcPulse = 500;
 
-            for (int i = 0; i < num; )
+            for (int i = 0; i < num;)
             {
                 //有障碍物，暂停
                 //int z = PLC.PlateErrorZHA();
@@ -1005,22 +1017,30 @@ namespace DreamSoft
                 //}
 
                 //加药+补偿
-                for (int j = 1; j <= (Config.Mac_A.Count_BC+1); j++)
+                for (int j = 1; j <= (Config.Mac_A.Count_BC + 1); j++)
                 {
+                    float movePulse = 0;
                     if (j == 1)
+                    {
                         nowPulse += upPulse;
+                        movePulse = upPulse;
+                    }
                     else
+                    {
                         nowPulse += Config.Mac_A.OneMMPulse_Plate * (drugThickness * Config.Mac_A.Height_BC);
-
+                        movePulse = Config.Mac_A.OneMMPulse_Plate * (drugThickness * Config.Mac_A.Height_BC);
+                    }
                     if (nowPulse > maxPulse)
                     {
                         nowPulse = maxPulse;
                     }
                     //上推
-                    PLC_Tcp_AP.PlateAutoMoveToPulse(type, nowPulse);
+                    //PLC_Tcp_AP.PlateAutoMoveToPulse(type, nowPulse);
+                    Plate_New.PlateUpPulse(type, (int)movePulse);
                     DateTime timeBegin = DateTime.Now;
                     Thread.Sleep(100);
-                    while (!PLC_Tcp_AP.PlateAutoMoveToPulseIsOK(type))
+                    //while (!PLC_Tcp_AP.PlateAutoMoveToPulseIsOK(type))
+                    while (!Plate_New.PlateUpPulseIsOK(type))
                     {
                         if (DateTime.Now > timeBegin.AddSeconds(Config.Mac_A.WaitTime_Auto_Plate))
                         {
@@ -1036,7 +1056,7 @@ namespace DreamSoft
                         Thread.Sleep(200);
                         while (true)
                         {
-                            newRecord = PLC_Tcp_AP.ReadPlateRecord(type);
+                            newRecord = Plate_New.ReadPlateRecord(type);//PLC_Tcp_AP.ReadPlateRecord(type);
                             if (newRecord > oldRecord)
                                 break;
                             else if (DateTime.Now > t1.AddSeconds(2))
@@ -1066,7 +1086,7 @@ namespace DreamSoft
                             {
                                 //故障
                                 SetErrorVisibility(Visibility.Visible);
-                                stopAdd = true; 
+                                stopAdd = true;
                             }
                         }
                     }
@@ -1193,6 +1213,48 @@ namespace DreamSoft
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
             timer_Num.Stop(); timer_PD.Stop(); timer_Scan.Stop();
+        }
+
+
+        private void btnEdit_L_Click(object sender, RoutedEventArgs e)
+        {
+            int num = 0;
+            if (!int.TryParse(tbxAddNumL.Text, out num))
+                return;
+            if (num >= plate_Left.Num)
+                return;
+            //获取药盒厚度
+            float drugThickness = 10;
+            string sql = "select height from drug_infoannex where drugonlycode ='{0}'";
+            sql = string.Format(sql, plate_Left.DrugOnlyCode);
+            string s;
+            csSql.ExecuteScalar(sql, Config.Soft.ConnString, out s);
+            if (!string.IsNullOrEmpty(s))
+                drugThickness = float.Parse(s);
+            float upPulse =  (plate_Left.Num - num) * drugThickness * Config.Mac_A.OneMMPulse_Plate;
+            Plate_New.PlateUpPulse(PLC_Tcp_AP.PlateType.Left, (int)upPulse);
+            plate_Left.Num = num;
+            tbNumL.Text = plate_Left.Num.ToString();
+        }
+        private void btnEdit_R_Click(object sender, RoutedEventArgs e)
+        {
+            int num = 0;
+            if (!int.TryParse(tbxAddNumR.Text, out num))
+                return;
+            if (num >= plate_Right.Num)
+                return;
+            //获取药盒厚度
+            float drugThickness = 10;
+            string sql = "select height from drug_infoannex where drugonlycode ='{0}'";
+            sql = string.Format(sql, plate_Right.DrugOnlyCode);
+            string s;
+            csSql.ExecuteScalar(sql, Config.Soft.ConnString, out s);
+            if (!string.IsNullOrEmpty(s))
+                drugThickness = float.Parse(s);
+            float upPulse = (plate_Right.Num - num) * drugThickness * Config.Mac_A.OneMMPulse_Plate;
+            Plate_New.PlateUpPulse(PLC_Tcp_AP.PlateType.Right, (int)upPulse);
+            plate_Right.Num = num;
+            tbNumR.Text = plate_Right.Num.ToString();
         }
     }
 }

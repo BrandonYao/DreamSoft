@@ -318,7 +318,7 @@
                             </Grid>
                         </Border>
                         
-                        <Border Width="110" Name="grid_ZHA">
+                        <Border Width="110" Name="grid_ZHA" Visibility="Collapsed">
                             <Button Margin="10" FontSize="16" Name="btZHA" Template="{StaticResource RedButton}" IsEnabled="False">加药口遮挡</Button>
                         </Border>
                         <Border Width="110" Name="grid_Max_Baffle">

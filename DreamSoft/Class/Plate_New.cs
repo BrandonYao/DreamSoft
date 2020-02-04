@@ -7,16 +7,17 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using static DreamSoft.PLC_Tcp_AP;
 
 namespace DreamSoft
 {
     class Plate_New
     {
-        private TcpClient tcp;
-        private Socket skt;
-        private IPAddress fIPAddrSick;
-        private int PORT = 2111;
-        private readonly object myLock = new object();
+        private static TcpClient tcp;
+        private static Socket skt;
+        private static IPAddress fIPAddrSick;
+        private static int PORT = 2111;
+        private static readonly object myLock = new object();
         public bool IsConnected { get { return tcp == null ? false : tcp.Connected; } }
         public int NowPos = 0, //当前位置
             Record = 0;//加药计数
@@ -34,15 +35,9 @@ namespace DreamSoft
         }
         #endregion
 
-        private HslCommunication.LogNet.LogNetDateTime fLog;
-        public Plate_New(string strIP, int port, string flag)
-        {
-            fIPAddrSick = IPAddress.Parse(strIP);
-            PORT = port;
-            fLog = new HslCommunication.LogNet.LogNetDateTime(Environment.CurrentDirectory + @"/Log/Plate" + flag,
-                HslCommunication.LogNet.GenerateMode.ByEveryDay);
-        }
-        private bool IpIsOK(IPAddress ipa)
+        private static HslCommunication.LogNet.LogNetDateTime fLog;
+
+        private static bool IpIsOK(IPAddress ipa)
         {
             bool result = false;
             Ping pingSender = new Ping();
@@ -62,8 +57,13 @@ namespace DreamSoft
             }
             return result;
         }
-        private bool Initial()
+        public static bool Initial()
         {
+            fIPAddrSick = IPAddress.Parse(Config.Mac_A.IP_IND);
+            PORT = Config.Mac_A.Port_IND;
+            if (fLog == null)
+                fLog = new HslCommunication.LogNet.LogNetDateTime(Environment.CurrentDirectory + @"/Log/Plate",
+                    HslCommunication.LogNet.GenerateMode.ByEveryDay);
             if (IpIsOK(fIPAddrSick))
             {
                 if (tcp != null)
@@ -110,7 +110,7 @@ namespace DreamSoft
         }
 
 
-        private void ModBusCRC16(ref byte[] cmd, int len)
+        private static void ModBusCRC16(ref byte[] cmd, int len)
         {
             ushort i, j, tmp, CRC16;
 
@@ -131,7 +131,7 @@ namespace DreamSoft
             cmd[i++] = (byte)(CRC16 & 0x00FF);
             cmd[i++] = (byte)((CRC16 & 0xFF00) >> 8);
         }
-        private bool ExecuteCmd(byte[] bts, string flag)
+        private static bool ExecuteCmd(byte[] bts, string flag)
         {
             bool res = false;
             lock (myLock)
@@ -165,16 +165,10 @@ namespace DreamSoft
             return res;
         }
 
-        public class PosNum
-        {
-            public DateTime NumDate { get; set; }
-            public int Num { get; set; }
-        }
 
-        private bool blnToReceive = false;
-        private List<byte> RecvDatas = new List<byte>();
-        private Dictionary<int, PosNum> Dic_Pos_Num = new Dictionary<int, PosNum>();
-        private void ReceiveData()
+        private static bool blnToReceive = false;
+        private static List<byte> RecvDatas = new List<byte>();
+        private static void ReceiveData()
         {
             while (blnToReceive)
             {
@@ -200,7 +194,8 @@ namespace DreamSoft
                                 int endIndex = 0;
                                 for (int i = 0; i < RecvDatas.Count; i++)
                                 {
-                                    if (RecvDatas[i] == 0xA8 && i + 8 < RecvDatas.Count)//报文头，且后面有数据
+                                    if ((RecvDatas[i] == 0xB1 || RecvDatas[i] == 0xB2 || RecvDatas[i] == 0xB3 || RecvDatas[i] == 0xB4 || RecvDatas[i] == 0xB5)
+                                        && i + 8 < RecvDatas.Count)//报文头，且后面有数据
                                     {
                                         byte[] bts = new byte[9], crc = new byte[2];
                                         RecvDatas.CopyTo(i, bts, 0, 9);
@@ -211,27 +206,29 @@ namespace DreamSoft
                                         ModBusCRC16(ref bts, 7);
                                         if (bts[7] == crc[0] && bts[8] == crc[1])//校验成功，数据完整
                                         {
-                                            //if (RecvDatas[i + 3] == 0x01)
+                                            if (RecvDatas[i] == 0xB1 && RecvDatas[i + 1] == 0x01)
+                                                bln_Plate_Origin_Left = true;
+                                            else if (RecvDatas[i] == 0xB2 && RecvDatas[i + 1] == 0x01)
+                                                bln_Plate_Origin_Right = true;
+                                            else if (RecvDatas[i] == 0xB3)
                                             {
-                                                int code = RecvDatas[i + 2] * 256 + RecvDatas[i + 1];
-                                                if (Dic_Pos_Num.Keys.Contains(code))
-                                                {
-                                                    if ((DateTime.Now - Dic_Pos_Num[code].NumDate).TotalMilliseconds < 2000)
-                                                    {
-                                                        Dic_Pos_Num[code].Num += 1;
-                                                        fLog.WriteDebug("计数成功\t" + code);
-                                                    }
-                                                    else fLog.WriteDebug("计数超时\t" + code);
-                                                }
+                                                bln_Plate_Up_Left = true;
+                                                if (RecvDatas[i + 1] == 0x01)
+                                                    int_PlateRecord_Left++;
                                             }
+                                            else if (RecvDatas[i] == 0xB4)
+                                            {
+                                                bln_Plate_Up_Right = true;
+                                                if (RecvDatas[i + 1] == 0x01)
+                                                    int_PlateRecord_Right++;
+                                            }
+                                            if (RecvDatas[i + 2] == 0x01)
+                                                bln_Plate_Error = true;
+                                            else bln_Plate_Error = false;
+
                                             i += 8;//跳过当前报文
                                             endIndex = i;
                                         }
-                                        //else
-                                        //{
-                                        //    fLog.WriteDebug("校验失败");
-                                        //    SendError("校验失败");
-                                        //}
                                     }
                                 }
                                 RecvDatas.RemoveRange(0, endIndex + 1);
@@ -254,20 +251,93 @@ namespace DreamSoft
             }
         }
 
-        public bool InitialPos()
-        { return true; }
-        public bool MoveUpByHeight(int height)
+
+        public static bool PlateOriginReset(PlateType type)
         {
-            NowPos += height;
-            return true;
+            bool result = false;
+            byte[] bts = new byte[9];
+            if (type == PlateType.Left)
+            {
+                bln_Plate_Origin_Left = false;
+                bts[0] = 0xB1;
+            }
+            else
+            {
+                bln_Plate_Origin_Right = false;
+                bts[0] = 0xB2;
+            }
+            bts[1] = 0x00;
+            bts[2] = 0x00;
+            bts[3] = 0x00;
+            bts[4] = 0x00;
+            bts[5] = 0x01;
+            bts[6] = 0xEF;
+            fLog.WriteDebug("指令\t", GetStrFromBytes(bts));
+            result = ExecuteCmd(bts, new StackTrace().GetFrame(0).GetMethod().ToString());
+            return result;
         }
-        public bool GetRecord(out int num)
+        private static bool bln_Plate_Origin_Left = false, bln_Plate_Origin_Right = false;
+        public static bool PlateOriginResetIsOK(PlateType type)
         {
-            num = Record;
-            return true;
+            if (type == PlateType.Left)
+                return bln_Plate_Origin_Left;
+            else return bln_Plate_Origin_Right;
         }
 
-        private string GetStrFromBytes(byte[] bts)
+        public static bool PlateUpPulse(PlateType type, int pulse)
+        {
+            bool result = false;
+            byte[] bts = new byte[9];
+            if (type == PlateType.Left)
+            {
+                bln_Plate_Up_Left = false;
+                bts[0] = 0xB3;
+            }
+            else
+            {
+                bln_Plate_Up_Right = false;
+                bts[0] = 0xB4;
+            }
+            bts[1] = (byte)(pulse / 256);
+            bts[2] = (byte)(pulse % 256);
+            bts[3] = 0x00;
+            bts[4] = 0x00;
+            bts[5] = 0x01;
+            bts[6] = 0xEF;
+            fLog.WriteDebug("指令\t", GetStrFromBytes(bts));
+            result = ExecuteCmd(bts, new StackTrace().GetFrame(0).GetMethod().ToString());
+            return result;
+        }
+        private static bool bln_Plate_Up_Left = false, bln_Plate_Up_Right = false;
+        public static bool PlateUpPulseIsOK(PlateType type)
+        {
+            if (type == PlateType.Left)
+                return bln_Plate_Up_Left;
+            else return bln_Plate_Up_Right;
+        }
+
+        private static int int_PlateRecord_Left = 0, int_PlateRecord_Right = 0;
+        public static int ReadPlateRecord(PlateType type)
+        {
+            if (type == PlateType.Left)
+                return int_PlateRecord_Left;
+            else return int_PlateRecord_Right;
+        }
+        public static void ResetPlateRecord(PlateType type)
+        {
+            if (type == PlateType.Left)
+                int_PlateRecord_Left = 0;
+            else int_PlateRecord_Right = 0;
+        }
+        private static bool bln_Plate_Error = false;
+        public static bool PlateStateIsOK()
+        {
+            if (bln_Plate_Error) return false;
+            else return true;
+        }
+        
+
+        private static string GetStrFromBytes(byte[] bts)
         {
             StringBuilder sb = new StringBuilder();
             foreach (byte bt in bts)

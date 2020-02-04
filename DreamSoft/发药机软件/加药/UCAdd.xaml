@@ -137,6 +137,7 @@
                             <RowDefinition Height="20"></RowDefinition>
                             <RowDefinition Height="30"></RowDefinition>
                             <RowDefinition Height="50"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Grid.Background>
                             <ImageBrush ImageSource="/DreamSoft;component/Images/plate.png"></ImageBrush>
@@ -145,6 +146,10 @@
                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14">左加药仓</TextBlock>
                         <TextBlock Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18">加 药 量</TextBlock>
                         <TextBlock Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36" Foreground="Crimson" Name="tbNumL">0</TextBlock>
+                        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBox Name="tbxAddNumL" Margin="10" Width="50" Text="10" Style="{StaticResource centerBox}"/>
+                            <Button Content="修 改" Padding="10,5" Margin="5,8" Click="btnEdit_L_Click"/>
+                        </StackPanel>
                     </Grid>
                     <TextBlock Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center">批号</TextBlock>
                     <TextBox Grid.Row="1" Grid.Column="1" Margin="5,1" Name="tbBatchL" Style="{StaticResource centerBox}"></TextBox>
@@ -174,6 +179,7 @@
                             <RowDefinition Height="20"></RowDefinition>
                             <RowDefinition Height="30"></RowDefinition>
                             <RowDefinition Height="50"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Grid.Background>
                             <ImageBrush ImageSource="/DreamSoft;component/Images/plate.png"></ImageBrush>
@@ -182,6 +188,10 @@
                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14">右加药仓</TextBlock>
                         <TextBlock Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18">加 药 量</TextBlock>
                         <TextBlock Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36" Foreground="Crimson" Name="tbNumR">0</TextBlock>
+                        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBox Name="tbxAddNumR" Margin="10" Width="50" Text="10" Style="{StaticResource centerBox}"/>
+                            <Button Content="修 改" Padding="10,5" Margin="5,8" Click="btnEdit_R_Click"/>
+                        </StackPanel>
                     </Grid>
                     <TextBlock Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center">批号</TextBlock>
                     <TextBox Grid.Row="1" Grid.Column="1" Margin="5,1" Name="tbBatchR" Style="{StaticResource centerBox}"></TextBox>

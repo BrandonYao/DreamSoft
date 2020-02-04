@@ -55,8 +55,11 @@ namespace DreamSoft
             public static string IP_PLC;
             public static string Port_PLC;
 
-            public static string IP_DCT;
-            public static int Port_DCT;
+            //public static string IP_DCT;
+            //public static int Port_DCT;
+
+            public static string IP_IND;
+            public static int Port_IND;
 
             public static string Port_DPJ;
             public static string Port_Scanner;
@@ -388,6 +391,8 @@ namespace DreamSoft
                 Mac_A.Port_PLC = DicsMac_A["Port_PLC"];
                 //Mac_A.IP_DCT = DicsMac_A.Keys.Contains("IP_DCT") ? DicsMac_A["IP_DCT"] : "192.168.3.200";
                 //Mac_A.Port_DCT = DicsMac_A.Keys.Contains("Port_DCT") ? int.Parse(DicsMac_A["Port_DCT"]) : 2000;
+                Mac_A.IP_IND = DicsMac_A.Keys.Contains("IP_IND") ? DicsMac_A["IP_IND"] : "192.168.4.200";
+                Mac_A.Port_IND = DicsMac_A.Keys.Contains("Port_IND") ? int.Parse(DicsMac_A["Port_IND"]) : 2000;
                 Mac_A.Port_DPJ = DicsMac_A["Port_DPJ"];
                 Mac_A.Port_Scanner = DicsMac_A["Port_Scanner"];
                 Mac_A.Port_Laser_Left = DicsMac_A["Port_Laser_Left"];

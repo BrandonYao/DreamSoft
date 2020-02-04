@@ -27,11 +27,11 @@ namespace DreamSoft
             for (int i = 1; i <= Config.Mac_A.Count_Unit; i++)
             {
                 cbUnitCode.Items.Add(i.ToString());
-            } 
+            }
             cbLayerCode.Items.Clear();
             for (int i = 1; i <= Config.Mac_A.Count_Lay; i++)
             {
-                cbLayerCode.Items.Add(i.ToString().PadLeft(2,'0'));
+                cbLayerCode.Items.Add(i.ToString().PadLeft(2, '0'));
             }
         }
 
@@ -39,7 +39,7 @@ namespace DreamSoft
         {
             rbAdd.IsChecked = true; rbHandL.IsChecked = true;
             cbUnitCode.SelectedIndex = cbLayerCode.SelectedIndex = cbColumnCode.SelectedIndex = 0;
-            
+
             tbNowX.Text = PLC_Tcp_AP.ReadExtramanPulseX().ToString();
             tbNowZ.Text = PLC_Tcp_AP.ReadExtramanPulseZ().ToString();
             tbNowL.Text = PLC_Tcp_AP.ReadPlatePulse(PLC_Tcp_AP.PlateType.Left).ToString();
@@ -61,7 +61,7 @@ namespace DreamSoft
             string dir = "";
             if ((bool)rbHandL.IsChecked)
             {
-                dir= "L";
+                dir = "L";
             }
             if ((bool)rbHandR.IsChecked)
             {
@@ -209,7 +209,7 @@ update pos_pulse set pulsex={4},pulsez={5} where maccode='{0}' and poscode='{1}'
                 return;
             }
             float xp; float zp;
-            if (float.TryParse(x,out xp) && float.TryParse(z, out zp))
+            if (float.TryParse(x, out xp) && float.TryParse(z, out zp))
             {
                 PLC_Tcp_AP.ExtramanAutoMoveToPulse(xp, zp);
                 DateTime timeBegin = DateTime.Now;
@@ -400,11 +400,13 @@ update pos_pulse set pulsex={4},pulsez={5} where maccode='{0}' and poscode='{1}'
         private void btZero_Plate_Click(object sender, RoutedEventArgs e)
         {
             Cursor = Cursors.Wait;
-            if (PLC_Tcp_AP.PlateOriginReset())
+            //if (PLC_Tcp_AP.PlateOriginReset())
+            if (Plate_New.PlateOriginReset(PLC_Tcp_AP.PlateType.Left) && Plate_New.PlateOriginReset(PLC_Tcp_AP.PlateType.Right))
             {
                 DateTime timeBegin = DateTime.Now;
                 Thread.Sleep(1000);
-                while (!PLC_Tcp_AP.PlateOriginResetIsOK())
+                //while (!PLC_Tcp_AP.PlateOriginResetIsOK())
+                while (!Plate_New.PlateOriginResetIsOK(PLC_Tcp_AP.PlateType.Left) || !Plate_New.PlateOriginResetIsOK(PLC_Tcp_AP.PlateType.Right))
                 {
                     if (DateTime.Now > timeBegin.AddSeconds(Config.Mac_A.WaitTime_Reset_Plate))
                         break;
@@ -452,21 +454,21 @@ update pos_pulse set pulsex={4},pulsez={5} where maccode='{0}' and poscode='{1}'
         //推药板向上
         private void btPlateUpL_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            PLC_Tcp_AP.ChangeAdd(0);
-            PLC_Tcp_AP.PlateManualMove(PLC_Tcp_AP.PlateType.Left, PLC_Tcp_AP.PlateMoveDir.Up);
+            //PLC_Tcp_AP.ChangeAdd(0);
+            //PLC_Tcp_AP.PlateManualMove(PLC_Tcp_AP.PlateType.Left, PLC_Tcp_AP.PlateMoveDir.Up);
         }
         //推药板向下
         private void btPlateDownL_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            PLC_Tcp_AP.ChangeAdd(0);
-            PLC_Tcp_AP.PlateManualMove(PLC_Tcp_AP.PlateType.Left, PLC_Tcp_AP.PlateMoveDir.Down);
+            //PLC_Tcp_AP.ChangeAdd(0);
+            //PLC_Tcp_AP.PlateManualMove(PLC_Tcp_AP.PlateType.Left, PLC_Tcp_AP.PlateMoveDir.Down);
         }
         //推药板停止
         private void btPlateL_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            PLC_Tcp_AP.PlateManualMove(PLC_Tcp_AP.PlateType.Left, PLC_Tcp_AP.PlateMoveDir.Stop);
-            Thread.Sleep(500);
-            tbNowL.Text = PLC_Tcp_AP.ReadPlatePulse(PLC_Tcp_AP.PlateType.Left).ToString();
+            //PLC_Tcp_AP.PlateManualMove(PLC_Tcp_AP.PlateType.Left, PLC_Tcp_AP.PlateMoveDir.Stop);
+            //Thread.Sleep(500);
+            //tbNowL.Text = PLC_Tcp_AP.ReadPlatePulse(PLC_Tcp_AP.PlateType.Left).ToString();
         }
         //推药板自动运行
         private void btRunL_Click(object sender, RoutedEventArgs e)
@@ -483,12 +485,14 @@ update pos_pulse set pulsex={4},pulsez={5} where maccode='{0}' and poscode='{1}'
                 return;
             }
             float pp;
-            if (float.TryParse(p,out pp))
+            if (float.TryParse(p, out pp))
             {
-                PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Left, pp);
+                //PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Left, pp);
+                Plate_New.PlateUpPulse(PLC_Tcp_AP.PlateType.Left, (int)pp);
                 DateTime timeBegin = DateTime.Now;
                 Thread.Sleep(200);
-                while (!PLC_Tcp_AP.PlateAutoMoveToPulseIsOK(PLC_Tcp_AP.PlateType.Left))
+                //while (!PLC_Tcp_AP.PlateAutoMoveToPulseIsOK(PLC_Tcp_AP.PlateType.Left))
+                while (!Plate_New.PlateUpPulseIsOK(PLC_Tcp_AP.PlateType.Left))
                 {
                     if (DateTime.Now > timeBegin.AddSeconds(Config.Mac_A.WaitTime_Auto_Plate))
                         break;
@@ -509,21 +513,21 @@ update pos_pulse set pulsex={4},pulsez={5} where maccode='{0}' and poscode='{1}'
         //推药板向上
         private void btPlateUpR_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            PLC_Tcp_AP.ChangeAdd(0);
-            PLC_Tcp_AP.PlateManualMove(PLC_Tcp_AP.PlateType.Right, PLC_Tcp_AP.PlateMoveDir.Up);
+            //PLC_Tcp_AP.ChangeAdd(0);
+            //PLC_Tcp_AP.PlateManualMove(PLC_Tcp_AP.PlateType.Right, PLC_Tcp_AP.PlateMoveDir.Up);
         }
         //推药板向下
         private void btPlateDownR_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            PLC_Tcp_AP.ChangeAdd(0);
-            PLC_Tcp_AP.PlateManualMove(PLC_Tcp_AP.PlateType.Right, PLC_Tcp_AP.PlateMoveDir.Down);
+            //PLC_Tcp_AP.ChangeAdd(0);
+            //PLC_Tcp_AP.PlateManualMove(PLC_Tcp_AP.PlateType.Right, PLC_Tcp_AP.PlateMoveDir.Down);
         }
         //推药板停止
         private void btPlateR_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            PLC_Tcp_AP.PlateManualMove(PLC_Tcp_AP.PlateType.Right, PLC_Tcp_AP.PlateMoveDir.Stop);
-            Thread.Sleep(500);
-            tbNowR.Text = PLC_Tcp_AP.ReadPlatePulse(PLC_Tcp_AP.PlateType.Right).ToString();
+            //PLC_Tcp_AP.PlateManualMove(PLC_Tcp_AP.PlateType.Right, PLC_Tcp_AP.PlateMoveDir.Stop);
+            //Thread.Sleep(500);
+            //tbNowR.Text = PLC_Tcp_AP.ReadPlatePulse(PLC_Tcp_AP.PlateType.Right).ToString();
         }
         //推药板自动运行
         private void btRunR_Click(object sender, RoutedEventArgs e)
@@ -542,10 +546,12 @@ update pos_pulse set pulsex={4},pulsez={5} where maccode='{0}' and poscode='{1}'
             float pp;
             if (float.TryParse(p, out pp))
             {
-                PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Right, pp);
+                //PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Right, pp);
+                Plate_New.PlateUpPulse(PLC_Tcp_AP.PlateType.Right, (int)pp);
                 DateTime timeBegin = DateTime.Now;
                 Thread.Sleep(200);
-                while (!PLC_Tcp_AP.PlateAutoMoveToPulseIsOK(PLC_Tcp_AP.PlateType.Right))
+                //while (!PLC_Tcp_AP.PlateAutoMoveToPulseIsOK(PLC_Tcp_AP.PlateType.Right))
+                while (!Plate_New.PlateUpPulseIsOK(PLC_Tcp_AP.PlateType.Right))
                 {
                     if (DateTime.Now > timeBegin.AddSeconds(Config.Mac_A.WaitTime_Auto_Plate))
                         break;
@@ -577,10 +583,12 @@ update pos_pulse set pulsex={4},pulsez={5} where maccode='{0}' and poscode='{1}'
             float pp;
             if (float.TryParse(p, out pp))
             {
-                PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Left, pp);
+                //PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Left, pp);
+                Plate_New.PlateUpPulse(PLC_Tcp_AP.PlateType.Left, (int)pp);
                 DateTime timeBegin = DateTime.Now;
                 Thread.Sleep(200);
-                while (!PLC_Tcp_AP.PlateAutoMoveToPulseIsOK(PLC_Tcp_AP.PlateType.Left))
+                //while (!PLC_Tcp_AP.PlateAutoMoveToPulseIsOK(PLC_Tcp_AP.PlateType.Left))
+                while (!Plate_New.PlateUpPulseIsOK(PLC_Tcp_AP.PlateType.Left))
                 {
                     if (DateTime.Now > timeBegin.AddSeconds(Config.Mac_A.WaitTime_Auto_Plate))
                         break;
@@ -619,10 +627,12 @@ update pos_pulse set pulsex={4},pulsez={5} where maccode='{0}' and poscode='{1}'
             float pp;
             if (float.TryParse(p, out pp))
             {
-                PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Right, pp);
+                //PLC_Tcp_AP.PlateAutoMoveToPulse(PLC_Tcp_AP.PlateType.Right, pp);
+                Plate_New.PlateUpPulse(PLC_Tcp_AP.PlateType.Right, (int)pp);
                 DateTime timeBegin = DateTime.Now;
                 Thread.Sleep(200);
-                while (!PLC_Tcp_AP.PlateAutoMoveToPulseIsOK(PLC_Tcp_AP.PlateType.Right))
+                //while (!PLC_Tcp_AP.PlateAutoMoveToPulseIsOK(PLC_Tcp_AP.PlateType.Right))
+                while (!Plate_New.PlateUpPulseIsOK(PLC_Tcp_AP.PlateType.Right))
                 {
                     if (DateTime.Now > timeBegin.AddSeconds(Config.Mac_A.WaitTime_Auto_Plate))
                         break;
