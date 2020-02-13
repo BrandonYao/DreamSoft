@@ -515,6 +515,7 @@ namespace DreamSoft
         //加药
         private void btAdd_Click(object sender, RoutedEventArgs e)
         {
+            if (!csMsg.ShowQuestion("请确认左右仓内的加药数量是否正确？", false)) return;
             Cursor = Cursors.Wait;
             upLeftIsOK = upRightIsOK = true;
             //推药板上移
